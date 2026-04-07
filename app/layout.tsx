@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
+import AuthBotton from "./components/AuthBotton";
 
 // Usando a Montserrat com pesos bem variados
 const fontBase = Montserrat({ subsets: ["latin"], weight: ['400', '600', '700', '800', '900'] });
@@ -55,9 +56,7 @@ export default function RootLayout({
 
             {/* CTAs */}
             <div className="flex items-center gap-3">
-              <button className="hidden md:flex px-4 py-2 rounded-md border border-purple-800 text-sm font-semibold text-purple-300 hover:text-white hover:border-purple-500 hover:bg-purple-950/30 transition-all bg-transparent">
-                Login
-              </button>
+              <AuthBotton />
 
               {/* Menu Mobile */}
               <button className="lg:hidden text-purple-400 hover:text-white p-2">
