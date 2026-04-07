@@ -1,0 +1,110 @@
+mutation CreateDemoData @transaction @auth(level: USER, insecureReason: "This is a seed data mutation, only to be used by authenticated users for initial data population.") {
+  user_insertMany(data: [
+    {
+      id: "user-1-uuid",
+      username: "john_doe",
+      email: "john.doe@example.com",
+      createdAt: "2023-01-01T10:00:00Z",
+      displayName: "John Doe",
+      bio: "A passionate blogger.",
+      profilePictureUrl: "https://example.com/john_doe.jpg"
+    },
+    {
+      id: "user-2-uuid",
+      username: "jane_smith",
+      email: "jane.smith@example.com",
+      createdAt: "2023-01-02T11:00:00Z",
+      displayName: "Jane Smith",
+      bio: "Loves writing about tech.",
+      profilePictureUrl: "https://example.com/jane_smith.jpg"
+    }
+  ])
+  blogPost_insertMany(data: [
+    {
+      id: "blogpost-1-uuid",
+      title: "My First Blog Post",
+      content: "This is the content of my very first blog post. I hope you enjoy it!",
+      createdAt: "2023-01-03T12:00:00Z",
+      status: "published",
+      authorId: "user-1-uuid"
+    },
+    {
+      id: "blogpost-2-uuid",
+      title: "Exploring Firebase Data Connect",
+      content: "Firebase Data Connect is a powerful tool for app development.",
+      createdAt: "2023-01-04T13:00:00Z",
+      status: "published",
+      authorId: "user-2-uuid"
+    }
+  ])
+  category_insertMany(data: [
+    {
+      id: "category-1-uuid",
+      name: "Technology",
+      description: "Posts about various technologies and software."
+    },
+    {
+      id: "category-2-uuid",
+      name: "Life Hacks",
+      description: "Tips and tricks for everyday life."
+    }
+  ])
+  tag_insertMany(data: [
+    {
+      id: "tag-1-uuid",
+      name: "Firebase"
+    },
+    {
+      id: "tag-2-uuid",
+      name: "GraphQL"
+    },
+    {
+      id: "tag-3-uuid",
+      name: "Blogging"
+    }
+  ])
+  blogPostCategory_insertMany(data: [
+    {
+      blogPostId: "blogpost-1-uuid",
+      categoryId: "category-2-uuid"
+    },
+    {
+      blogPostId: "blogpost-2-uuid",
+      categoryId: "category-1-uuid"
+    }
+  ])
+  blogPostTag_insertMany(data: [
+    {
+      blogPostId: "blogpost-1-uuid",
+      tagId: "tag-3-uuid"
+    },
+    {
+      blogPostId: "blogpost-2-uuid",
+      tagId: "tag-1-uuid"
+    },
+    {
+      blogPostId: "blogpost-2-uuid",
+      tagId: "tag-2-uuid"
+    }
+  ])
+  comment_insertMany(data: [
+    {
+      content: "Great post, John!",
+      createdAt: "2023-01-04T10:00:00Z",
+      authorId: "user-2-uuid",
+      blogPostId: "blogpost-1-uuid"
+    },
+    {
+      content: "Very informative, Jane!",
+      createdAt: "2023-01-05T11:00:00Z",
+      authorId: "user-1-uuid",
+      blogPostId: "blogpost-2-uuid"
+    }
+  ])
+  favoriteBlogPost_insertMany(data: [
+    {
+      userId: "user-2-uuid",
+      blogPostId: "blogpost-1-uuid"
+    }
+  ])
+}

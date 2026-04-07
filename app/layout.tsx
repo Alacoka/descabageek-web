@@ -83,21 +83,13 @@ export default function RootLayout({
                   DESCABA<span className="text-purple-400">GEEK.</span>
                 </h2>
                 <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
-                  De fã para fã. Nós respiramos cultura pop, devoramos animes, jogamos RPG e codamos nas horas vagas. Sua dose de nerdice Cyberpunk.
+                  Sua dose diária de nerdice.
                 </p>
               </div>
 
-              <div>
-                <h3 className="font-bold uppercase tracking-wider mb-4 text-gray-200">Conteúdo</h3>
-                <ul className="space-y-3 text-sm text-gray-400 font-medium">
-                  <li><Link href="#" className="hover:text-purple-400 transition-colors">Últimos Posts</Link></li>
-                  <li><Link href="#" className="hover:text-purple-400 transition-colors">Dicas Tech</Link></li>
-                  <li><Link href="#" className="hover:text-purple-400 transition-colors">Animes e Mangás</Link></li>
-                </ul>
-              </div>
 
               <div>
-                <h3 className="font-bold uppercase tracking-wider mb-4 text-gray-200">Conecte-se</h3>
+                <h3 className="font-bold uppercase tracking-wider mb-4 text-gray-200">Saiba mais</h3>
                 <ul className="space-y-3 text-sm text-gray-400 font-medium">
                   <li><Link href="https://www.youtube.com/@DescabaGeek" target="blank" className="hover:text-cyan-400 transition-colors">YouTube</Link></li>
                   <li><Link href="mailto:contato@descabageek.com" target="blank" className="hover:text-cyan-400 transition-colors">Contato</Link></li>

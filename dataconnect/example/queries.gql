@@ -1,0 +1,61 @@
+query GetPublicBlogPosts @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public as it only returns published blog posts.") {
+  blogPosts(where: { status: { eq: "published" } }) {
+    id
+    title
+    content
+    createdAt
+    author {
+      displayName
+      username
+    }
+    categories_via_BlogPostCategory {
+      name
+    }
+    tags_via_BlogPostTag {
+      name
+    }
+  }
+}
+
+query GetMyFavoriteBlogPosts @auth(level: USER) {
+  users(where: { id: { eq_expr: "auth.uid" } }) {
+    displayName
+    favoriteBlogPosts_on_user {
+      blogPost {
+        id
+        title
+        status
+        createdAt
+        author {
+          username
+        }
+      }
+    }
+  }
+}
+
+mutation CreateBlogPost($title: String!, $content: String!, $status: String!) @auth(level: USER) {
+  blogPost_insert(
+    data: {
+      title: $title
+      content: $content
+      status: $status
+      createdAt_expr: "request.time"
+      authorId_expr: "auth.uid"
+    }
+  ) {
+    id
+  }
+}
+
+mutation AddCategoryToBlogPost($blogPostId: UUID!, $categoryId: UUID!) @auth(level: USER) {
+  blogPostCategory_insert(
+    data: {
+      blogPostId: $blogPostId
+      categoryId: $categoryId
+    }
+  ) {
+    blogPostId
+    categoryId
+  }
+}
