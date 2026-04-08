@@ -1,5 +1,28 @@
 import Link from 'next/link';
 import { BlocksRenderer } from '@strapi/blocks-react-renderer';
+import type { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const { slug } = await params;
+
+    const res = await fetch(`http://localhost:1337/api/posts?filters[slug][$eq]=${slug}`, {
+        cache: 'no-store'
+    });
+
+    const json = await res.json();
+    const post = json.data?.[0];
+
+    if (!post) {
+        return { title: 'Post não encontrado | Descabageek' };
+    }
+
+    const dados = post.attributes || post;
+
+    return {
+        title: `${dados.titulo} | Descabageek`,
+        description: dados.descricao || 'Confira esta matéria no Descabageek!',
+    };
+}
 
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;

@@ -8,7 +8,7 @@ import AuthBotton from "./components/AuthBotton";
 const fontBase = Montserrat({ subsets: ["latin"], weight: ['400', '600', '700', '800', '900'] });
 
 export const metadata: Metadata = {
-  title: "Descabageek | Cultura Pop, Tech e Códigos",
+  title: "Descabageek",
   description: "Seu portal definitivo de conteúdo geek.",
 };
 
