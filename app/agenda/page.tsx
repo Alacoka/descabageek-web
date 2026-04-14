@@ -11,7 +11,6 @@ export default async function AgendaPage() {
     const json = await res.json();
     const lancamentos = json.data || [];
 
-    // Formatação de data
     const formatarData = (dataString: string) => {
         if (!dataString) return { dia: '', mes: '', ano: '' };
         const data = new Date(dataString);
@@ -22,14 +21,14 @@ export default async function AgendaPage() {
         };
     };
 
-    // Cores dinâmicas
+    // 1. Cores ajustadas para os novos nomes exatos
     const getTipoColor = (tipo: string) => {
         if (!tipo) return 'text-purple-400 border-purple-400';
-        const t = tipo.toLowerCase();
-        if (t === 'filme') return 'text-pink-400 border-pink-400';
-        if (t === 'série') return 'text-cyan-400 border-cyan-400';
-        if (t === 'mangá' || t === 'anime' || t === 'animação') return 'text-orange-400 border-orange-400';
-        if (t === 'jogo') return 'text-emerald-400 border-emerald-400';
+        const t = tipo.toUpperCase();
+        if (t === 'CINEMA') return 'text-pink-400 border-pink-400';
+        if (t === 'STREAMING') return 'text-cyan-400 border-cyan-400';
+        if (t === 'HQ-MANGA' || t === 'ANIMAÇÕES') return 'text-orange-400 border-orange-400';
+        if (t === 'GAMES') return 'text-emerald-400 border-emerald-400';
         return 'text-purple-400 border-purple-400';
     };
 
@@ -40,29 +39,30 @@ export default async function AgendaPage() {
         return null;
     };
 
-    // ⚡ MÁGICA: Função que agrupa os lançamentos por Sessão
+    // 2. Agrupamento à prova de balas (Ignora espaços, acentos e erros de digitação)
     const agruparPorTipo = (lista: any[]) => {
         const grupos: Record<string, any[]> = {};
 
         lista.forEach(item => {
             const dados = item.attributes || item;
-            const tipo = (dados.tipo || 'Outros').toLowerCase();
+            // Pega o texto do Strapi, remove espaços em branco nas pontas e põe tudo em maiúsculas
+            const tipoBruto = dados.tipo ? String(dados.tipo).trim().toUpperCase() : '';
 
-            let nomeSessao = 'OUTROS LANÇAMENTOS';
+            let nomeSessao = 'OUTROS';
 
-            // Aqui você define os nomes bonitos das sessões baseados no "tipo" do Strapi
-            if (tipo === 'mangá' || tipo === 'hq') {
-                nomeSessao = 'HQs & MANGÁS';
-            } else if (tipo === 'anime' || tipo === 'animação') {
+            // O Funil Inteligente:
+            if (tipoBruto.includes('HQ') || tipoBruto.includes('MANGA') || tipoBruto.includes('MANGÁ')) {
+                nomeSessao = 'HQ-MANGA';
+            } else if (tipoBruto.includes('ANIMAÇ') || tipoBruto.includes('ANIME')) {
                 nomeSessao = 'ANIMAÇÕES';
-            } else if (tipo === 'filme') {
-                nomeSessao = 'CINEMA';
-            } else if (tipo === 'série') {
-                nomeSessao = 'STREAMING';
-            } else if (tipo === 'jogo') {
+            } else if (tipoBruto.includes('GAME') || tipoBruto.includes('JOGO')) {
                 nomeSessao = 'GAMES';
-            } else {
-                nomeSessao = (dados.tipo || 'Outros').toUpperCase() + '';
+            } else if (tipoBruto.includes('STREAM')) {
+                nomeSessao = 'STREAMING';
+            } else if (tipoBruto.includes('CINEMA') || tipoBruto.includes('FILME')) {
+                nomeSessao = 'CINEMA';
+            } else if (tipoBruto !== '') {
+                nomeSessao = tipoBruto; // Se criar uma categoria nova no Strapi, ele usa ela mesma
             }
 
             if (!grupos[nomeSessao]) {
@@ -97,7 +97,6 @@ export default async function AgendaPage() {
                     nomesDasSessoes.map((sessao) => (
                         <section key={sessao} className="flex flex-col">
 
-                            {/* Título da Sessão */}
                             <div className="flex items-center gap-4 mb-8">
                                 <div className="w-2 h-8 bg-cyan-400 rounded-full shadow-[0_0_10px_rgba(34,211,238,0.5)]"></div>
                                 <h2 className="text-2xl font-black text-gray-100 tracking-widest uppercase">
@@ -106,7 +105,6 @@ export default async function AgendaPage() {
                                 <div className="flex-grow h-px bg-gradient-to-r from-purple-900/50 to-transparent ml-4"></div>
                             </div>
 
-                            {/* Grid daquela Sessão Específica */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
                                 {lancamentosAgrupados[sessao].map((item: any) => {
                                     const dados = item.attributes || item;
@@ -116,8 +114,18 @@ export default async function AgendaPage() {
                                     return (
                                         <div
                                             key={item.id}
-                                            className="flex flex-col bg-[#0f0224]/80 border border-purple-900/30 rounded-2xl overflow-hidden hover:bg-[#0f0224] hover:border-purple-500 transition-all duration-300 group relative shadow-lg"
+                                            className={`flex flex-col bg-[#0f0224]/80 border border-purple-900/30 rounded-2xl overflow-hidden transition-all duration-300 group relative shadow-lg ${dados.link_plataforma ? 'hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(34,211,238,0.15)] cursor-pointer hover:-translate-y-1' : 'hover:border-purple-500'}`}
                                         >
+
+                                            {dados.link_plataforma && (
+                                                <a
+                                                    href={dados.link_plataforma}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="absolute inset-0 z-50"
+                                                    aria-label={`Acessar ${dados.titulo}`}
+                                                ></a>
+                                            )}
 
                                             <div className="w-full aspect-[3/4] bg-[#030009] relative overflow-hidden">
                                                 {getImageUrl(item) ? (
@@ -142,30 +150,20 @@ export default async function AgendaPage() {
                                                     </span>
                                                 </div>
 
-                                                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#0f0224]/90 to-transparent"></div>
+                                                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#0f0224]/90 to-transparent z-10"></div>
                                             </div>
 
-                                            <div className="p-5 flex flex-col flex-grow relative z-10 -mt-10">
+                                            <div className="p-5 flex flex-col flex-grow relative z-20 -mt-10">
                                                 <div className="flex flex-wrap items-center gap-2 mb-3">
                                                     <span className={`text-[10px] font-bold px-2 py-1 rounded-md border bg-[#060111] uppercase tracking-wider ${colorClass}`}>
                                                         {dados.tipo || 'Evento'}
                                                     </span>
 
-                                                    {dados.plataforma && dados.link_plataforma ? (
-                                                        <a
-                                                            href={dados.link_plataforma}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="text-[10px] font-bold px-2 py-1 rounded-md border border-cyan-800 bg-cyan-950/50 text-cyan-400 uppercase tracking-wider hover:bg-cyan-500 hover:text-white transition-colors flex items-center gap-1 shadow-[0_0_10px_rgba(34,211,238,0.2)]"
-                                                            title={`Abrir em ${dados.plataforma}`}
-                                                        >
-                                                            {dados.plataforma} <span className="text-[10px]">↗</span>
-                                                        </a>
-                                                    ) : dados.plataforma ? (
-                                                        <span className="text-[10px] font-bold px-2 py-1 rounded-md border border-gray-800 bg-gray-900 text-gray-300 uppercase tracking-wider">
-                                                            {dados.plataforma}
+                                                    {dados.plataforma && (
+                                                        <span className={`text-[10px] font-bold px-2 py-1 rounded-md border uppercase tracking-wider flex items-center gap-1 transition-colors ${dados.link_plataforma ? 'border-cyan-800 bg-cyan-950/50 text-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.2)] group-hover:bg-cyan-500 group-hover:text-white group-hover:border-cyan-400' : 'border-gray-800 bg-gray-900 text-gray-300'}`}>
+                                                            {dados.plataforma} {dados.link_plataforma && <span className="text-[10px]">↗</span>}
                                                         </span>
-                                                    ) : null}
+                                                    )}
                                                 </div>
 
                                                 <h3 className="text-lg md:text-xl font-bold text-gray-100 group-hover:text-cyan-400 transition-colors leading-tight mb-2">
