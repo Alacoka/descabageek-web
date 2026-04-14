@@ -43,13 +43,13 @@ export default function RootLayout({
 
             {/* Menu com os ícones que você curte */}
             <nav className="hidden lg:flex items-center gap-6 text-[13px] font-semibold text-gray-300 tracking-wide uppercase">
-              <Link href="#" className="hover:text-white hover:shadow-cyan transition-colors flex items-center gap-2">
+              <Link href="/agenda" className="hover:text-white hover:shadow-cyan transition-colors flex items-center gap-2">
                 <span className="text-base"></span> Agenda
               </Link>
-              <Link href="#" className="hover:text-white hover:shadow-cyan transition-colors flex items-center gap-2">
+              <Link href="/listas" className="hover:text-white hover:shadow-cyan transition-colors flex items-center gap-2">
                 <span className="text-base"></span> Listas
               </Link>
-              <Link href="#" className="hover:text-white hover:shadow-cyan transition-colors flex items-center gap-2">
+              <Link href="/guias" className="hover:text-white hover:shadow-cyan transition-colors flex items-center gap-2">
                 <span className="text-base"></span> Guias
               </Link>
             </nav>
