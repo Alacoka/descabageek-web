@@ -58,12 +58,14 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     const categoria = dados.categoria;
     const dataPublicacao = dados.publishedAt || post.createdAt;
 
-    // ⚡ Ajuste na lógica da imagem para usar a apiUrl
-    let imageUrl = null;
-    if (dados.capa?.data?.attributes?.url) {
-        imageUrl = `${apiUrl}${dados.capa.data.attributes.url}`;
-    } else if (dados.capa?.url) {
-        imageUrl = `${apiUrl}${dados.capa.url}`;
+    // ⚡ Ajuste na lógica da imagem para suportar Cloudinary e links locais
+    const capaUrl = dados.capa?.data?.attributes?.url || dados.capa?.url;
+    let imageUrl: string | undefined = undefined;
+
+    if (capaUrl) {
+        imageUrl = capaUrl.startsWith('http') || capaUrl.startsWith('//')
+            ? capaUrl
+            : `${apiUrl}${capaUrl}`;
     }
 
     // Funções de formatação

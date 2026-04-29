@@ -21,12 +21,15 @@ export default async function Home() {
 
   const getImageUrl = (post: any) => {
     const dados = post.attributes || post;
-    // Trocado o localhost pela nossa apiUrl
-    if (dados.capa?.data?.attributes?.url) return `${apiUrl}${dados.capa.data.attributes.url}`;
-    if (dados.capa?.url) return `${apiUrl}${dados.capa.url}`;
+    const url = dados.capa?.data?.attributes?.url || dados.capa?.url;
 
-    // 👇 A MÁGICA REAL OFICIAL AQUI: Retorna undefined
-    return undefined;
+    if (!url) return undefined;
+
+    // ✨ A MÁGICA: Se o link já for completo (Cloudinary), usa ele direto
+    if (url.startsWith('http') || url.startsWith('//')) return url;
+
+    // Se for link curto (antigos no Render), coloca a apiUrl na frente
+    return `${apiUrl}${url}`;
   };
 
   const formatarData = (dataString: string) => {
@@ -61,7 +64,6 @@ export default async function Home() {
             rel="noopener noreferrer"
             className="block w-full max-w-[900px] mx-auto aspect-[21/9] bg-[#0f0224] rounded-3xl overflow-hidden border-2 border-purple-900 hover:border-cyan-400 transition-colors shadow-[0_0_30px_rgba(168,85,247,0.15)] group relative"
           >
-            {/* 👇 Aqui a gente devolveu a lógica correta da Imagem pro Banner */}
             {getImageUrl(bannerPost) ? (
               <img
                 src={getImageUrl(bannerPost)}
