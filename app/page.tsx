@@ -111,7 +111,7 @@ export default async function Home() {
                 {(heroPost.attributes || heroPost).titulo}
               </h3>
               <p className="text-gray-400 text-sm leading-relaxed mb-8 line-clamp-3">
-                {(heroPost.attributes || heroPost).descricao || 'Confira o artigo mais recente, vambora!'}
+                {(heroPost.attributes || heroPost).descricao || 'Confira o artigo mais recente!'}
               </p>
               <span className="inline-flex items-center gap-2 text-purple-400 font-bold text-sm uppercase tracking-wider group-hover:text-cyan-400 transition-colors">
                 Ler Artigo Completo <span className="text-lg">➔</span>
