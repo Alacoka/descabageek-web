@@ -1,7 +1,10 @@
 import Link from 'next/link';
 
 export default async function Home() {
-  const res = await fetch('http://localhost:1337/api/posts?populate=*', {
+  // ⚡ Puxa a URL da nuvem que configuramos no .env, ou usa o link direto como garantia
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://descabageek-admin.onrender.com';
+
+  const res = await fetch(`${apiUrl}/api/posts?populate=*`, {
     cache: 'no-store'
   });
 
@@ -18,8 +21,9 @@ export default async function Home() {
 
   const getImageUrl = (post: any) => {
     const dados = post.attributes || post;
-    if (dados.capa?.data?.attributes?.url) return `http://localhost:1337${dados.capa.data.attributes.url}`;
-    if (dados.capa?.url) return `http://localhost:1337${dados.capa.url}`;
+    // Trocado o localhost pela nossa apiUrl
+    if (dados.capa?.data?.attributes?.url) return `${apiUrl}${dados.capa.data.attributes.url}`;
+    if (dados.capa?.url) return `${apiUrl}${dados.capa.url}`;
     return null;
   };
 
@@ -43,7 +47,7 @@ export default async function Home() {
   return (
     <div className="p-6 md:p-12 max-w-[1200px] mx-auto text-white">
 
-      {/* 💥 SEÇÃO DO BANNER PATROCINADO (Aparece no topo se existir) */}
+      {/* 💥 SEÇÃO DO BANNER PATROCINADO */}
       {bannerPost && (
         <section className="mb-16">
           <h2 className="text-sm font-black text-purple-400 tracking-[0.2em] uppercase mb-6 text-center">
@@ -66,7 +70,6 @@ export default async function Home() {
                 Espaço Publicitário
               </div>
             )}
-            {/* Overlay sutil para garantir leitura se tiver texto por cima */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#060111] via-transparent to-transparent opacity-60"></div>
           </a>
         </section>
