@@ -62,3 +62,6 @@ npm install
 
 # Inicie o servidor
 npm run dev
+```
+---
+Desenvolvido por Kawã Alacoque.
