@@ -130,7 +130,7 @@ export default async function AgendaPage() {
                                             <div className="w-full aspect-[3/4] bg-[#030009] relative overflow-hidden">
                                                 {getImageUrl(item) ? (
                                                     <img
-                                                        src={getImageUrl(item)}
+                                                        src={getImageUrl(item) || undefined}
                                                         alt={dados.titulo}
                                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100"
                                                     />
