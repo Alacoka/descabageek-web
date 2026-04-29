@@ -42,7 +42,7 @@ export default function RootLayout({
             </Link>
 
             {/* Menu com os ícones que você curte */}
-            <nav className="hidden lg:flex items-center gap-6 text-[13px] font-semibold text-gray-300 tracking-wide uppercase">
+            {/* <nav className="hidden lg:flex items-center gap-6 text-[13px] font-semibold text-gray-300 tracking-wide uppercase">
               <Link href="/agenda" className="hover:text-white hover:shadow-cyan transition-colors flex items-center gap-2">
                 <span className="text-base"></span> Agenda
               </Link>
@@ -52,7 +52,7 @@ export default function RootLayout({
               <Link href="/guias" className="hover:text-white hover:shadow-cyan transition-colors flex items-center gap-2">
                 <span className="text-base"></span> Guias
               </Link>
-            </nav>
+            </nav> */}
 
             {/* CTAs */}
             <div className="flex items-center gap-3">

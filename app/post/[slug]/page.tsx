@@ -2,10 +2,14 @@ import Link from 'next/link';
 import { BlocksRenderer } from '@strapi/blocks-react-renderer';
 import type { Metadata } from "next";
 
+// ⚡ URL Centralizada para evitar repetição
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://descabageek-admin.onrender.com';
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
 
-    const res = await fetch(`http://localhost:1337/api/posts?filters[slug][$eq]=${slug}`, {
+    // Trocado localhost pela apiUrl
+    const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${slug}`, {
         cache: 'no-store'
     });
 
@@ -27,13 +31,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
 
-    // Busca o post no Strapi pelo slug
-    const res = await fetch(`http://localhost:1337/api/posts?filters[slug][$eq]=${slug}&populate=*`, {
+    // Busca o post no Strapi pela apiUrl
+    const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${slug}&populate=*`, {
         cache: 'no-store'
     });
 
     const json = await res.json();
-    const post = json.data[0];
+    const post = json.data?.[0];
 
     // Tela de erro caso o post não exista
     if (!post) {
@@ -54,14 +58,15 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     const categoria = dados.categoria;
     const dataPublicacao = dados.publishedAt || post.createdAt;
 
+    // ⚡ Ajuste na lógica da imagem para usar a apiUrl
     let imageUrl = null;
     if (dados.capa?.data?.attributes?.url) {
-        imageUrl = `http://localhost:1337${dados.capa.data.attributes.url}`;
+        imageUrl = `${apiUrl}${dados.capa.data.attributes.url}`;
     } else if (dados.capa?.url) {
-        imageUrl = `http://localhost:1337${dados.capa.url}`;
+        imageUrl = `${apiUrl}${dados.capa.url}`;
     }
 
-    // Funções de formatação (iguais às da Home)
+    // Funções de formatação
     const formatarData = (dataString: string) => {
         if (!dataString) return '';
         return new Date(dataString).toLocaleDateString('pt-BR', {
@@ -89,8 +94,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
             <article>
                 <header className="mb-10 text-left">
-
-                    {/* Metadados: Categoria Neon e Data */}
+                    {/* Metadados */}
                     <div className="flex items-center gap-3 text-xs md:text-sm font-bold text-gray-500 mb-6">
                         <span className={`${getCategoryColor(categoria)} uppercase tracking-widest`}>
                             {categoria || 'Artigo'}
@@ -99,7 +103,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                         <span>{formatarData(dataPublicacao)}</span>
                     </div>
 
-                    {/* Título da Matéria */}
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter leading-tight mb-8">
                         {titulo}
                     </h1>
@@ -116,12 +119,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                     </div>
                 )}
 
-                {/* Conteúdo Renderizado (O texto do Strapi) */}
+                {/* Conteúdo Renderizado */}
                 <div className="prose prose-lg md:prose-xl prose-invert prose-purple max-w-none text-gray-300 leading-relaxed font-medium">
                     <BlocksRenderer content={conteudo} />
                 </div>
             </article>
-
         </main>
     );
 }
