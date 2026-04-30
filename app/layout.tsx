@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     icon: '/icon.png',
   },
   title: "Descabageek",
-  description: "Seu portal definitivo de conteúdo geek.",
+  description: "A Sua Fonte de Descabaçamento Nerdístico.",
 };
 
 export default function RootLayout({
@@ -85,7 +85,7 @@ export default function RootLayout({
                   DESCABA<span className="text-purple-400">GEEK.</span>
                 </h2>
                 <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
-                  Sua dose diária de nerdice.
+                  A Sua Fonte de Descabaçamento Nerdístico!
                 </p>
               </div>
 
