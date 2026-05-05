@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const { slug } = await params;
 
     // Trocado localhost pela apiUrl
-    const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${slug}`, {
+    const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${slug}&populate[conteudo_do_post][populate]=*`, {
         cache: 'no-store'
     });
 
@@ -121,9 +121,41 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                     </div>
                 )}
 
-                {/* Conteúdo Renderizado */}
+                {/* Conteúdo Renderizado (Dynamic Zone) */}
                 <div className="prose prose-lg md:prose-xl prose-invert prose-purple max-w-none text-gray-300 leading-relaxed font-medium">
-                    <BlocksRenderer content={conteudo} />
+
+                    {dados.conteudo_do_post && dados.conteudo_do_post.map((bloco: any, index: number) => {
+
+                        switch (bloco.__component) {
+
+                            case 'shared.bloco-de-texto':
+                                // Renderiza o campo 'text' que você criou
+                                return <p key={index}>{bloco.text}</p>;
+
+                            case 'shared.bloco-de-imagem':
+                                // Extrai a URL da imagem (lidando com os formatos do Strapi)
+                                const imgData = bloco.img?.data?.attributes || bloco.img;
+                                if (!imgData?.url) return null;
+
+                                const imgUrl = imgData.url.startsWith('http')
+                                    ? imgData.url
+                                    : `${apiUrl}${imgData.url}`;
+
+                                return (
+                                    <figure key={index} className="my-8">
+                                        <img
+                                            src={imgUrl}
+                                            alt="Imagem da matéria"
+                                            className="w-full rounded-2xl shadow-[0_0_30px_rgba(168,85,247,0.15)] border border-purple-900/30 object-cover"
+                                        />
+                                    </figure>
+                                );
+
+                            default:
+                                return null; // Se for um bloco desconhecido, ignora
+                        }
+                    })}
+
                 </div>
             </article>
         </main>
