@@ -4,7 +4,6 @@ import Link from "next/link";
 import "./globals.css";
 import AuthBotton from "./components/AuthBotton";
 
-// Usando a Montserrat com pesos bem variados
 const fontBase = Montserrat({ subsets: ["latin"], weight: ['400', '600', '700', '800', '900'] });
 
 export const metadata: Metadata = {
