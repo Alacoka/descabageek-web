@@ -8,7 +8,7 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://descabageek-admin.onr
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
 
-    // Trocado localhost pela apiUrl
+    // ⚡ Fetch corrigido: apenas populate=* e com encodeURIComponent
     const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`, {
         cache: 'no-store'
     });
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
 
-    // Busca o post no Strapi pela apiUrl
+    // ⚡ Fetch corrigido: apenas populate=* e com encodeURIComponent
     const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`, {
         cache: 'no-store'
     });
@@ -54,10 +54,12 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     // Extraindo os dados
     const dados = post.attributes || post;
     const titulo = dados.titulo;
+    // ⚡ AQUI ESTÁ O SEGREDO: Voltar a ler o campo 'conteudo'
     const conteudo = dados.conteudo;
     const categoria = dados.categoria;
+    const dataPublicacao = dados.publishedAt || post.createdAt;
 
-    // ⚡ Ajuste na lógica da imagem para suportar Cloudinary e links locais
+    // Ajuste na lógica da imagem para suportar Cloudinary e links locais
     const capaUrl = dados.capa?.data?.attributes?.url || dados.capa?.url;
     let imageUrl: string | undefined = undefined;
 
@@ -120,7 +122,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                     </div>
                 )}
 
-                {/* Conteúdo Renderizado (Blocks) */}
+                {/* ⚡ Conteúdo Renderizado (Blocks) - Substituiu o switch do mapa dinâmico */}
                 <div className="prose prose-lg md:prose-xl prose-invert prose-purple max-w-none text-gray-300 leading-relaxed font-medium">
                     {conteudo ? (
                         <BlocksRenderer content={conteudo} />
