@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const { slug } = await params;
 
     // Trocado localhost pela apiUrl
-    const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${slug}&populate[conteudo_do_post][populate]=*`, {
+    const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${encodeURIComponent(slug)}&populate[conteudo_do_post][populate]=*`, {
         cache: 'no-store'
     });
 
@@ -32,7 +32,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     const { slug } = await params;
 
     // Busca o post no Strapi pela apiUrl
-    const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${slug}&populate[conteudo_do_post][populate]=*&populate[capa]=*`, {
+    const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${encodeURIComponent(slug)}&populate[conteudo_do_post][populate]=*&populate[capa]=*`, {
         cache: 'no-store'
     });
 
