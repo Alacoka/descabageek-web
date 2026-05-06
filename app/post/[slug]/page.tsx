@@ -120,37 +120,13 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                     </div>
                 )}
 
-                {/* Conteúdo Renderizado (Dynamic Zone) */}
+                {/* Conteúdo Renderizado (Blocks) */}
                 <div className="prose prose-lg md:prose-xl prose-invert prose-purple max-w-none text-gray-300 leading-relaxed font-medium">
-                    {conteudoDinamico && conteudoDinamico.map((bloco: any, index: number) => {
-                        switch (bloco.__component) {
-                            case 'shared.bloco-de-texto':
-                                // Usa o campo 'text' que aparece no seu print do Strapi
-                                return <p key={index} className="mb-4">{bloco.text}</p>;
-
-                            case 'shared.bloco-de-imagem':
-                                // Pega a imagem do campo 'img'
-                                const imgData = bloco.img?.data?.attributes || bloco.img;
-                                if (!imgData?.url) return null;
-
-                                const urlFinal = imgData.url.startsWith('http')
-                                    ? imgData.url
-                                    : `${apiUrl}${imgData.url}`;
-
-                                return (
-                                    <figure key={index} className="my-10">
-                                        <img
-                                            src={urlFinal}
-                                            alt="Imagem da matéria"
-                                            className="w-full rounded-2xl shadow-2xl border border-purple-900/20"
-                                        />
-                                    </figure>
-                                );
-
-                            default:
-                                return null;
-                        }
-                    })}
+                    {conteudo ? (
+                        <BlocksRenderer content={conteudo} />
+                    ) : (
+                        <p>Nenhum conteúdo encontrado.</p>
+                    )}
                 </div>
             </article>
         </main>
