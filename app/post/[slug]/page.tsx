@@ -32,7 +32,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     const { slug } = await params;
 
     // Busca o post no Strapi pela apiUrl
-    const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${slug}&populate=*`, {
+    const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${slug}&populate[conteudo_do_post][populate]=*&populate[capa]=*`, {
         cache: 'no-store'
     });
 
@@ -54,7 +54,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     // Extraindo os dados
     const dados = post.attributes || post;
     const titulo = dados.titulo;
-    const conteudo = dados.conteudo;
+    const conteudoDinamico = dados.conteudo_do_post;
     const categoria = dados.categoria;
     const dataPublicacao = dados.publishedAt || post.createdAt;
 
@@ -123,39 +123,35 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
                 {/* Conteúdo Renderizado (Dynamic Zone) */}
                 <div className="prose prose-lg md:prose-xl prose-invert prose-purple max-w-none text-gray-300 leading-relaxed font-medium">
-
-                    {dados.conteudo_do_post && dados.conteudo_do_post.map((bloco: any, index: number) => {
-
+                    {conteudoDinamico && conteudoDinamico.map((bloco: any, index: number) => {
                         switch (bloco.__component) {
-
                             case 'shared.bloco-de-texto':
-                                // Renderiza o campo 'text' que você criou
-                                return <p key={index}>{bloco.text}</p>;
+                                // Usa o campo 'text' que aparece no seu print do Strapi
+                                return <p key={index} className="mb-4">{bloco.text}</p>;
 
                             case 'shared.bloco-de-imagem':
-                                // Extrai a URL da imagem (lidando com os formatos do Strapi)
+                                // Pega a imagem do campo 'img'
                                 const imgData = bloco.img?.data?.attributes || bloco.img;
                                 if (!imgData?.url) return null;
 
-                                const imgUrl = imgData.url.startsWith('http')
+                                const urlFinal = imgData.url.startsWith('http')
                                     ? imgData.url
                                     : `${apiUrl}${imgData.url}`;
 
                                 return (
-                                    <figure key={index} className="my-8">
+                                    <figure key={index} className="my-10">
                                         <img
-                                            src={imgUrl}
+                                            src={urlFinal}
                                             alt="Imagem da matéria"
-                                            className="w-full rounded-2xl shadow-[0_0_30px_rgba(168,85,247,0.15)] border border-purple-900/30 object-cover"
+                                            className="w-full rounded-2xl shadow-2xl border border-purple-900/20"
                                         />
                                     </figure>
                                 );
 
                             default:
-                                return null; // Se for um bloco desconhecido, ignora
+                                return null;
                         }
                     })}
-
                 </div>
             </article>
         </main>
