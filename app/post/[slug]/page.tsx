@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const { slug } = await params;
 
     // Trocado localhost pela apiUrl
-    const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${encodeURIComponent(slug)}&populate[conteudo_do_post][populate]=*`, {
+    const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`, {
         cache: 'no-store'
     });
 
@@ -32,7 +32,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     const { slug } = await params;
 
     // Busca o post no Strapi pela apiUrl
-    const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${encodeURIComponent(slug)}&populate[conteudo_do_post][populate]=*&populate[capa]=*`, {
+    const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`, {
         cache: 'no-store'
     });
 
@@ -54,9 +54,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     // Extraindo os dados
     const dados = post.attributes || post;
     const titulo = dados.titulo;
-    const conteudoDinamico = dados.conteudo_do_post;
+    const conteudo = dados.conteudo;
     const categoria = dados.categoria;
-    const dataPublicacao = dados.publishedAt || post.createdAt;
 
     // ⚡ Ajuste na lógica da imagem para suportar Cloudinary e links locais
     const capaUrl = dados.capa?.data?.attributes?.url || dados.capa?.url;

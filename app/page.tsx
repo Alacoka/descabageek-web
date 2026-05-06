@@ -10,7 +10,6 @@ export default async function Home() {
 
   const json = await res.json();
   const allPosts = json.data;
-  console.log("DADOS DO STRAPI:", JSON.stringify(json, null, 2));
 
   // ⚡ MÁGICA DO BANNER: Separamos o que é anúncio do que é artigo
   const bannerPost = allPosts?.find((post: any) => (post.attributes || post).is_banner === true);
