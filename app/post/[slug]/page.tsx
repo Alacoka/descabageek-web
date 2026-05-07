@@ -54,7 +54,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     const titulo = dados.titulo;
 
     // Captura dos dois formatos possíveis de conteúdo
-    const corpoMarkdown = dados.corpo_do_texto;
+    const corpoMarkdown = dados.corpo_do_textoo;
     const conteudoBlocks = dados.conteudo;
 
     const categoria = dados.categoria;
