@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { BlocksRenderer } from '@strapi/blocks-react-renderer';
+import ReactMarkdown from 'react-markdown';
 import type { Metadata } from "next";
 
 // ⚡ URL Centralizada para evitar repetição
@@ -54,8 +54,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     // Extraindo os dados
     const dados = post.attributes || post;
     const titulo = dados.titulo;
-    // ⚡ AQUI ESTÁ O SEGREDO: Voltar a ler o campo 'conteudo'
-    const conteudo = dados.conteudo;
+    const conteudo = dados.corpo_do_texto;
     const categoria = dados.categoria;
     const dataPublicacao = dados.publishedAt || post.createdAt;
 
@@ -122,10 +121,35 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                     </div>
                 )}
 
-                {/* ⚡ Conteúdo Renderizado (Blocks) - Substituiu o switch do mapa dinâmico */}
+                {/* Conteúdo Renderizado (Rich Text Markdown) */}
                 <div className="prose prose-lg md:prose-xl prose-invert prose-purple max-w-none text-gray-300 leading-relaxed font-medium">
                     {conteudo ? (
-                        <BlocksRenderer content={conteudo} />
+                        <ReactMarkdown
+                            components={{
+                                img({ node, ...props }) {
+                                    const imgUrl = props.src?.startsWith('http')
+                                        ? props.src
+                                        : `${apiUrl}${props.src}`;
+
+                                    return (
+                                        <figure className="my-12">
+                                            <img
+                                                {...props}
+                                                src={imgUrl}
+                                                className="w-full rounded-2xl shadow-2xl border border-purple-900/30"
+                                            />
+                                            {props.alt && (
+                                                <figcaption className="text-center text-sm text-gray-500 mt-3 font-normal">
+                                                    {props.alt}
+                                                </figcaption>
+                                            )}
+                                        </figure>
+                                    );
+                                }
+                            }}
+                        >
+                            {conteudo}
+                        </ReactMarkdown>
                     ) : (
                         <p>Nenhum conteúdo encontrado.</p>
                     )}
