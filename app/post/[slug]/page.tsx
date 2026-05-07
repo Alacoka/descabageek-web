@@ -119,12 +119,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                     </div>
                 )}
 
-                {/* Área de Conteúdo com Prioridade para Markdown */}
+                {/* Área de Conteúdo - Plano de Ataque Final */}
                 <div className="prose prose-lg md:prose-xl prose-invert prose-purple max-w-none text-gray-300 leading-relaxed font-medium">
-                    {corpoMarkdown ? (
+                    {corpoMarkdown && corpoMarkdown.trim().length > 0 ? (
                         <ReactMarkdown
                             components={{
-                                // Customização de Imagens no meio do texto
                                 img: ({ ...props }) => {
                                     const src = props.src || '';
                                     const fullSrc = src.startsWith('http') ? src : `${apiUrl}${src}`;
@@ -133,7 +132,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                                             <img
                                                 src={fullSrc}
                                                 alt={props.alt || 'Imagem DescabaGeek'}
-                                                className="w-full rounded-2xl shadow-[0_0_30px_rgba(168,85,247,0.15)] border border-purple-900/30 object-cover group-hover:border-purple-500/50 transition-colors"
+                                                className="w-full rounded-2xl shadow-[0_0_30px_rgba(168,85,247,0.15)] border border-purple-900/30 object-cover"
                                             />
                                             {props.alt && (
                                                 <figcaption className="text-center text-sm text-gray-500 mt-4 font-normal italic">
@@ -142,19 +141,22 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                                             )}
                                         </figure>
                                     );
-                                },
-                                // Melhora o espaçamento de links
-                                a: ({ ...props }) => (
-                                    <a {...props} className="text-cyan-400 hover:text-white transition-colors underline decoration-cyan-900 underline-offset-4" target="_blank" rel="noopener noreferrer" />
-                                )
+                                }
                             }}
                         >
                             {corpoMarkdown}
                         </ReactMarkdown>
-                    ) : conteudoBlocks ? (
-                        <BlocksRenderer content={conteudoBlocks} />
                     ) : (
-                        <p className="text-center py-20 opacity-30 italic">O conteúdo desta matéria ainda está a ser carregado...</p>
+                        /* 🕵️‍♂️ DEBUG: Se não aparecer nada, este aviso vai nos dizer o porquê */
+                        <div className="text-center py-20 border-2 border-dashed border-purple-900/30 rounded-3xl">
+                            <p className="text-purple-500 font-bold mb-2">DEBUG MODE</p>
+                            <p className="text-xs text-gray-500">
+                                Tentando ler o campo: <span className="text-cyan-400">corpo_do_textoo</span>
+                            </p>
+                            <p className="text-xs text-gray-500 mt-2">
+                                Status: {corpoMarkdown === undefined ? "Indefinido" : corpoMarkdown === null ? "Nulo" : "Vazio ou Incompatível"}
+                            </p>
+                        </div>
                     )}
                 </div>
             </article>
