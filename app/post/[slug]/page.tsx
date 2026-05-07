@@ -126,7 +126,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                             components={{
                                 img: ({ ...props }) => {
                                     const src = props.src || '';
-                                    const fullSrc = src.startsWith('http') ? src : `${apiUrl}${src}`;
+                                    const fullSrc = (src as string).startsWith('http') ? src : `${apiUrl}${src}`;
                                     return (
                                         <figure className="my-14 group">
                                             <img
