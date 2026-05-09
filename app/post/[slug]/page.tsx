@@ -128,7 +128,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                                     const src = props.src || '';
                                     const fullSrc = (src as string).startsWith('http') ? src : `${apiUrl}${src}`;
                                     return (
-                                        <figure className="my-14 group">
+                                        <figure className="my-10 group">
                                             <img
                                                 src={fullSrc}
                                                 alt={props.alt || 'Imagem DescabaGeek'}
