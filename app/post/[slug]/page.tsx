@@ -126,7 +126,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                         <ReactMarkdown
                             components={{
                                 h2: ({ ...props }) => (
-                                    <h2 className="text-[30px] font-bold text-white mt-12 mb-6" {...props} />
+                                    <h2 className="text-[30px] font-bold text-white mt-12 mb-6 text-center" {...props} />
                                 ),
                                 h3: ({ ...props }) => (
                                     <h3 className="text-[25px] font-semibold text-purple-400 mt-8 mb-4" {...props} />
@@ -142,7 +142,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                                             <img
                                                 src={fullSrc}
                                                 alt={props.alt || 'Imagem DescabaGeek'}
-                                                className="w-120 h-120 rounded-2xl shadow-[0_0_30px_rgba(168,85,247,0.15)] border border-purple-900/30 object-cover"
+                                                className="w-240 h-180 rounded-2xl shadow-[0_0_30px_rgba(168,85,247,0.15)] border border-purple-900/30 object-cover"
                                             />
                                             {props.alt && (
                                                 <figcaption className="ml-5 text-sm text-gray-500 mt-4 font-normal italic ">
