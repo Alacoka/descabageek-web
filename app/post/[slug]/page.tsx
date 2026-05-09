@@ -103,7 +103,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                         <span>{formatarData(dataPublicacao)}</span>
                     </div>
 
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter leading-[1.1] mb-8">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter leading-[1.1] mb-8 fs-50px">
                         {titulo}
                     </h1>
                 </header>
