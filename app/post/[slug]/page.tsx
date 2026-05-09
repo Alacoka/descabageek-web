@@ -132,7 +132,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                                             <img
                                                 src={fullSrc}
                                                 alt={props.alt || 'Imagem DescabaGeek'}
-                                                className="w-full rounded-2xl shadow-[0_0_30px_rgba(168,85,247,0.15)] border border-purple-900/30 object-cover"
+                                                className="w-20 h-20 rounded-2xl shadow-[0_0_30px_rgba(168,85,247,0.15)] border border-purple-900/30 object-cover"
                                             />
                                             {props.alt && (
                                                 <figcaption className="text-center text-sm text-gray-500 mt-4 font-normal italic">
