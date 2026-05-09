@@ -1,8 +1,8 @@
 # DescabaGeek
 
-> **Portal de Cultura Pop, RPG e Tecnologia desenvolvido com arquitetura Full-Stack moderna (Headless CMS).**
+> **Portal de Cultura Pop desenvolvido com arquitetura Full-Stack moderna (Headless CMS).**
 
-🔗 **Acesso ao Projeto (Front-end):** [https://descabageek.vercel.app](https://descabageek.vercel.app)  
+🔗 **Acesso ao Projeto (Front-end):** [https://www.descabageek.com](https://www.descabageek.com)  
 
 ---
 
