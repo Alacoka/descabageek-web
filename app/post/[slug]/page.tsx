@@ -32,10 +32,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     const { slug } = await params;
 
     // Fetch simplificado para garantir compatibilidade com Strapi v5
+    //NÃO MEXER!!!
     const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`, {
         cache: 'no-store'
     });
-    //NÃO MEXER!!!
 
     const json = await res.json();
     const post = json.data?.[0];
@@ -103,7 +103,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                         <span>{formatarData(dataPublicacao)}</span>
                     </div>
 
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter leading-[1.1] mb-8 fs-50px">
+                    <h1 className="font-black tracking-tighter leading-[1.1] mb-8"
+                        style={{ fontSize: '50px' }}
+                    >
                         {titulo}
                     </h1>
                 </header>
