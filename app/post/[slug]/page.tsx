@@ -125,6 +125,15 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                     {corpoMarkdown && corpoMarkdown.trim().length > 0 ? (
                         <ReactMarkdown
                             components={{
+                                h2: ({ ...props }) => (
+                                    <h2 className="text-[30px] font-bold text-white mt-12 mb-6" {...props} />
+                                ),
+                                h3: ({ ...props }) => (
+                                    <h3 className="text-[25px] font-semibold text-white mt-8 mb-4" {...props} />
+                                ),
+                                p: ({ ...props }) => (
+                                    <p className="text-[17px] text-gray-300 leading-relaxed mb-6" {...props} />
+                                ),
                                 img: ({ ...props }) => {
                                     const src = props.src || '';
                                     const fullSrc = (src as string).startsWith('http') ? src : `${apiUrl}${src}`;
