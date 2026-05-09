@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { BlocksRenderer } from '@strapi/blocks-react-renderer';
+// import { BlocksRenderer } from '@strapi/blocks-react-renderer';
 import ReactMarkdown from 'react-markdown';
 import type { Metadata } from "next";
 
@@ -35,6 +35,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`, {
         cache: 'no-store'
     });
+    //NÃO MEXER!!!
 
     const json = await res.json();
     const post = json.data?.[0];
@@ -44,7 +45,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <div className="min-h-screen flex flex-col items-center justify-center p-10 text-white font-sans">
                 <h1 className="text-4xl font-black mb-4 tracking-tighter">Post não encontrado :/</h1>
                 <Link href="/" className="text-purple-400 hover:text-cyan-400 transition-all uppercase tracking-widest text-xs font-bold border-b border-purple-900/50 pb-1">
-                    &larr; Voltar para a Base
+                    &larr; Voltar
                 </Link>
             </div>
         );
@@ -55,8 +56,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
     // Captura dos dois formatos possíveis de conteúdo
     const corpoMarkdown = dados.corpo_do_textoo;
-    const conteudoBlocks = dados.conteudo;
-
     const categoria = dados.categoria;
     const dataPublicacao = dados.publishedAt || post.createdAt;
 
@@ -135,7 +134,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                                                 className="w-120 h-120 rounded-2xl shadow-[0_0_30px_rgba(168,85,247,0.15)] border border-purple-900/30 object-cover"
                                             />
                                             {props.alt && (
-                                                <figcaption className="ml-5 text-sm text-gray-500 mt-4 font-normal italic">
+                                                <figcaption className="ml-5 text-sm text-gray-500 mt-4 font-normal italic ">
                                                     {props.alt}
                                                 </figcaption>
                                             )}
