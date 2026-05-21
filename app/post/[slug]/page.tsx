@@ -139,7 +139,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                                     const texto = String(props.children || '');
 
                                     // Condicional que transforma o link em botão
-                                    if (texto.startsWith('')) {
+                                    if (texto.startsWith('BTN: ')) {
                                         const textoLimpo = texto.replace('BTN:', '').trim();
                                         return (
                                             <a
