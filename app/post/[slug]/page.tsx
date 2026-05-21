@@ -126,14 +126,36 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                         <ReactMarkdown
                             components={{
                                 h2: ({ ...props }) => (
-                                    <h2 className="text-[30px] font-bold text-white mt-12 mb-6 text-center" {...props} />
+                                    <h2 className="text-[30px] font-bold text-white mt-12 mb-6" {...props} />
                                 ),
                                 h3: ({ ...props }) => (
-                                    <h3 className="text-[25px] font-semibold text-purple-400 mt-8 mb-4" {...props} />
+                                    <h3 className="text-[25px] font-semibold text-purple-300 mt-8 mb-4" {...props} />
                                 ),
                                 p: ({ ...props }) => (
                                     <p className="text-[17px] text-gray-300 leading-relaxed mb-6" {...props} />
                                 ),
+                                // INTERCEPTADOR DE LINKS PARA VIRAR BOTÃO
+                                a: ({ ...props }) => {
+                                    const texto = String(props.children || '');
+
+                                    // Condicional que transforma o link em botão
+                                    if (texto.startsWith('')) {
+                                        const textoLimpo = texto.replace('BTN:', '').trim();
+                                        return (
+                                            <a
+                                                {...props}
+                                                className="inline-flex items-center justify-center px-8 py-4 mt-4 mb-2 bg-[#00BFFF]/30 text-cyan-400 font-black rounded-xl shadow-[0_0_20px_rgba(34,211,238,0.2)] border border-cyan-400/50 hover:bg-cyan-800/50 hover:shadow-[0_0_30px_rgba(34,211,238,0.5)] hover:text-white transition-all hover:scale-[1.03] tracking-widest uppercase text-xs cursor-pointer select-none max-w-full !no-underline" target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                {textoLimpo}
+                                            </a>
+                                        );
+                                    }
+
+                                    // Link ciano comum do texto continua funcionando igual
+                                    return (
+                                        <a {...props} className="text-cyan-400 hover:text-white transition-colors underline decoration-cyan-900 underline-offset-4" target="_blank" rel="noopener noreferrer" />);
+                                },
                                 img: ({ ...props }) => {
                                     const src = props.src || '';
                                     const fullSrc = (src as string).startsWith('http') ? src : `${apiUrl}${src}`;
@@ -142,7 +164,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                                             <img
                                                 src={fullSrc}
                                                 alt={props.alt || 'Imagem DescabaGeek'}
-                                                className="w-90 h-90 rounded-2xl shadow-[0_0_30px_rgba(168,85,247,0.15)] border border-purple-900/30 object-cover"
+                                                className="w-120 h-120 rounded-2xl shadow-[0_0_30px_rgba(168,85,247,0.15)] border border-purple-900/30 object-cover"
                                             />
                                             {props.alt && (
                                                 <figcaption className="ml-5 text-sm text-gray-500 mt-4 font-normal italic ">
