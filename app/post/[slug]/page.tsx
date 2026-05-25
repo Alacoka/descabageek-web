@@ -4,7 +4,9 @@ import type { Metadata } from "next";
 
 // URL da API centralizada
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://descabageek-admin.onrender.com';
+const siteUrl = 'https://descabageek.vercel.app'; // Atualiza isto quando comprares o domínio .com!
 
+// 🚀 O MOTOR DE SEO (OpenGraph)
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
 
@@ -16,14 +18,42 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const post = json.data?.[0];
 
     if (!post) {
-        return { title: 'Post não encontrado | Descabageek' };
+        return { title: 'Post não encontrado | DescabaGeek' };
     }
 
     const dados = post.attributes || post;
+    const categoria = dados.categorias || dados.categoria || 'Mundo Geek';
+
+    // Tratamento da imagem de capa para o WhatsApp/Twitter/Google
+    const capaUrl = dados.capa?.data?.attributes?.url || dados.capa?.url;
+    const imageUrl = capaUrl ? (capaUrl.startsWith('http') || capaUrl.startsWith('//') ? capaUrl : `${apiUrl}${capaUrl}`) : `${siteUrl}/icon.png`;
 
     return {
-        title: `${dados.titulo} | Descabageek`,
-        description: dados.descricao || 'Confira esta matéria no Descabageek!',
+        title: `${dados.titulo} | DescabaGeek`,
+        description: dados.descricao || 'Confira esta matéria completa no DescabaGeek!',
+        keywords: ['cultura pop', 'geek', 'nerd', 'anime', 'rpg', categoria],
+        openGraph: {
+            title: dados.titulo,
+            description: dados.descricao,
+            url: `${siteUrl}/post/${slug}`,
+            siteName: 'DescabaGeek',
+            images: [
+                {
+                    url: imageUrl,
+                    width: 1200,
+                    height: 630,
+                    alt: dados.titulo,
+                }
+            ],
+            locale: 'pt_BR',
+            type: 'article',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: dados.titulo,
+            description: dados.descricao,
+            images: [imageUrl],
+        }
     };
 }
 
