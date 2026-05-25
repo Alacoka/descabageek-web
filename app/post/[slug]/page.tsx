@@ -55,7 +55,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
     // Captura dos dois formatos possíveis de conteúdo
     const corpoMarkdown = dados.corpo_do_textoo;
-    const categoria = dados.categoria;
+    const categorias = dados.categorias;
     const dataPublicacao = dados.publishedAt || post.createdAt;
 
     // Lógica da Imagem de Capa
@@ -95,8 +95,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <article>
                 <header className="mb-10 text-left">
                     <div className="flex items-center gap-3 text-xs md:text-sm font-bold text-gray-500 mb-6">
-                        <span className={`${getCategoryColor(categoria)} uppercase tracking-widest`}>
-                            {categoria || 'Mundo Geek'}
+                        <span className={`${getCategoryColor(categorias)} uppercase tracking-widest`}>
+                            {categorias || 'Mundo Geek'}
                         </span>
                         <span className="text-purple-900/50">•</span>
                         <span>{formatarData(dataPublicacao)}</span>
