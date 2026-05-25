@@ -40,6 +40,9 @@ export default function Header() {
                     <Link href="/guias" className="hover:text-white hover:shadow-cyan transition-colors flex items-center gap-2">
                         Guias
                     </Link>
+                    <Link href="/contato" className="hover:text-white hover:shadow-cyan transition-colors flex items-center gap-2">
+                        Contato
+                    </Link>
                 </nav>
 
                 {/* CTAs e Botão Mobile */}
@@ -73,6 +76,10 @@ export default function Header() {
 
                     <Link href="/guias" onClick={toggleMenu} className="w-full group flex items-center justify-center p-5 rounded-2xl bg-[#0a021c] border border-purple-900/30 hover:bg-purple-900/20 hover:border-cyan-400/50 transition-all active:scale-[0.98]">
                         <span className="text-gray-300 group-hover:text-cyan-400 font-extrabold uppercase tracking-widest text-lg transition-colors text-center">Guias</span>
+                    </Link>
+
+                    <Link href="/contato" onClick={toggleMenu} className="w-full group flex items-center justify-center p-5 rounded-2xl bg-[#0a021c] border border-purple-900/30 hover:bg-purple-900/20 hover:border-cyan-400/50 transition-all active:scale-[0.98]">
+                        <span className="text-gray-300 group-hover:text-cyan-400 font-extrabold uppercase tracking-widest text-lg transition-colors text-center">Contato</span>
                     </Link>
 
                 </nav>
