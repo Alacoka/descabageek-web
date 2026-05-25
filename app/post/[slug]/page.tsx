@@ -77,9 +77,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     const getCategoryColor = (cat: string) => {
         if (!cat) return 'text-purple-400';
         const catStr = cat.toLowerCase();
-        if (catStr.includes('tech')) return 'text-cyan-400';
-        if (catStr.includes('anime')) return 'text-orange-400';
-        if (catStr.includes('rpg')) return 'text-emerald-400';
+        if (catStr.includes('Guia')) return 'text-cyan-400';
+        if (catStr.includes('Lista')) return 'text-orange-400';
+        if (catStr.includes('Agenda')) return 'text-emerald-400';
         return 'text-purple-400';
     };
 
