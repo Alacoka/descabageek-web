@@ -53,7 +53,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     const dados = post.attributes || post;
     const titulo = dados.titulo;
     const corpoMarkdown = dados.corpo_do_textoo;
-    const categoria = dados.categorias || dados.categoria;
+    const categoria = dados.categoria;
     const dataPublicacao = dados.publishedAt || post.createdAt;
 
     // Lógica da Imagem de Capa
