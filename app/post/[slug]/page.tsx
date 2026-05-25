@@ -1,5 +1,4 @@
 import Link from 'next/link';
-// import { BlocksRenderer } from '@strapi/blocks-react-renderer';
 import ReactMarkdown from 'react-markdown';
 import type { Metadata } from "next";
 
@@ -32,7 +31,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     const { slug } = await params;
 
     // Fetch simplificado para garantir compatibilidade com Strapi v5
-    //NÃO MEXER!!!
+    // NÃO MEXER!!!
     const res = await fetch(`${apiUrl}/api/posts?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`, {
         cache: 'no-store'
     });
@@ -152,7 +151,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                                         );
                                     }
 
-                                    // Link ciano comum do texto continua funcionando igual
+                                    // Link ciano comum do texto
                                     return (
                                         <a {...props} className="text-cyan-400 hover:text-white transition-colors underline decoration-cyan-900 underline-offset-4" target="_blank" rel="noopener noreferrer" />);
                                 },
