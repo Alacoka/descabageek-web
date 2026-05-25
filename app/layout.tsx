@@ -9,6 +9,7 @@ const fontBase = Montserrat({ subsets: ["latin"], weight: ['400', '600', '700', 
 export const metadata: Metadata = {
   icons: {
     icon: '/icon.png',
+    apple: '/icon.png',
   },
   title: "Descabageek",
   description: "A Sua Fonte de Descabaçamento Nerdístico.",
