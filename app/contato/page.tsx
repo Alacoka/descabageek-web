@@ -12,7 +12,7 @@ export default function ContatoPage() {
         <main className="min-h-screen p-6 md:p-12 max-w-5xl mx-auto text-white selection:bg-purple-500/30">
 
             <Link href="/" className="text-purple-500 font-bold mb-8 inline-flex items-center gap-2 hover:text-cyan-400 transition-colors uppercase tracking-widest text-xs">
-                <span className="text-lg leading-none">&larr;</span> Voltar
+                <span className="text-lg leading-none">&larr;</span> Voltar para o Início
             </Link>
 
             <header className="mb-16 border-b border-purple-900/30 pb-6">
