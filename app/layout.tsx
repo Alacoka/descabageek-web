@@ -6,7 +6,7 @@ import Header from "./components/header";
 
 const fontBase = Montserrat({ subsets: ["latin"], weight: ['400', '600', '700', '800', '900'] });
 
-// DICA DE OURO: Personaliza o título, descrição e as imagens de pré-visualização para redes sociais! Isso ajuda a atrair mais visitantes e a mostrar o teu conteúdo de forma mais profissional.
+// Personaliza o título, descrição e as imagens de pré-visualização para redes sociais! Isso ajuda a atrair mais visitantes e a mostrar o teu conteúdo de forma mais profissional.
 export const metadata: Metadata = {
   icons: {
     icon: '/icon.png',
