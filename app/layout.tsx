@@ -6,6 +6,7 @@ import Header from "./components/header";
 
 const fontBase = Montserrat({ subsets: ["latin"], weight: ['400', '600', '700', '800', '900'] });
 
+// DICA DE OURO: Personaliza o título, descrição e as imagens de pré-visualização para redes sociais! Isso ajuda a atrair mais visitantes e a mostrar o teu conteúdo de forma mais profissional.
 export const metadata: Metadata = {
   icons: {
     icon: '/icon.png',
@@ -13,6 +14,28 @@ export const metadata: Metadata = {
   },
   title: "Descabageek",
   description: "A Sua Fonte de Descabaçamento Nerdístico.",
+  openGraph: {
+    title: "Descabageek",
+    description: "A Sua Fonte de Descabaçamento Nerdístico.",
+    url: "https://descabageek.com",
+    siteName: "Descabageek",
+    images: [
+      {
+        url: "/capa-google.png",
+        width: 1200,
+        height: 630,
+        alt: "Descabageek - A Sua Fonte de Descabaçamento Nerdístico",
+      }
+    ],
+    locale: "pt_BR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Descabageek",
+    description: "A Sua Fonte de Descabaçamento Nerdístico.",
+    images: ["/capa-google.png"],
+  }
 };
 
 export default function RootLayout({
