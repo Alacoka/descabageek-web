@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     siteName: "Descabageek",
     images: [
       {
-        url: "/capa-google.png",
+        url: "/logo-google.png",
         width: 1200,
         height: 630,
         alt: "Descabageek - A Sua Fonte de Descabaçamento Nerdístico",
