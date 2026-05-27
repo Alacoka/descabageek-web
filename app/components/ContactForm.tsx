@@ -70,7 +70,7 @@ export default function ContactForm() {
 
             <div>
                 <label htmlFor="nome" className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 mt-4">Nome</label>
-                <input type="text" id="nome" name="nome" required disabled={status === 'loading'} className="w-full bg-[#030009] border border-purple-900/50 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all placeholder:text-gray-700 disabled:opacity-50" placeholder="Como te devemos chamar?" />
+                <input type="text" id="nome" name="nome" required disabled={status === 'loading'} className="w-full bg-[#030009] border border-purple-900/50 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all placeholder:text-gray-700 disabled:opacity-50" placeholder="Como devemos te chamar?" />
             </div>
 
             <div>

@@ -50,7 +50,7 @@ export default function RootLayout({
                 <h3 className="font-bold uppercase tracking-wider mb-4 text-gray-200">Saiba mais</h3>
                 <ul className="space-y-3 text-sm text-gray-400 font-medium">
                   <li><Link href="https://www.youtube.com/@DescabaGeek" target="blank" className="hover:text-cyan-400 transition-colors">YouTube</Link></li>
-                  <li><Link href="/contato" className="hover:text-cyan-400 transition-colors">Contato</Link></li>
+                  <li><Link href="/contato" className="hover:text-cyan-400 transition-colors">Fale Conosco</Link></li>
                 </ul>
               </div>
             </div>

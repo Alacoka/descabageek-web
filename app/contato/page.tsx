@@ -20,7 +20,7 @@ export default function ContatoPage() {
                     Contato
                 </h1>
                 <p className="text-gray-400 mt-4 font-medium text-lg max-w-3x2">
-                    Tem alguma sugestão de melhoria, sugestão de post, ou quer fechar uma parceria? <br /> Será um prazer te ouvir.
+                    Tem alguma sugestão de melhoria, sugestão de post, ou quer fechar uma parceria? <br /> Será um prazer te ouvir!
                 </p>
             </header>
 
