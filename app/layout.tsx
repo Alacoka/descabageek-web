@@ -3,6 +3,7 @@ import { Montserrat } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 import Header from "./components/header";
+import Capa from "../public/logo-google.png";
 
 const fontBase = Montserrat({ subsets: ["latin"], weight: ['400', '600', '700', '800', '900'] });
 
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
     siteName: "Descabageek",
     images: [
       {
-        url: "/logo-google.png",
+        url: Capa.src,
         width: 1200,
         height: 630,
         alt: "Descabageek - A Sua Fonte de Descabaçamento Nerdístico",
