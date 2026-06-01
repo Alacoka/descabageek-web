@@ -10,13 +10,20 @@ export const metadata: Metadata = {
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://descabageek-admin.onrender.com';
 
 export default async function AgendaPage() {
-    // 1. Faz o fetch na coleção de agendas
     const res = await fetch(`${apiUrl}/api/agendas?populate=*&sort=data_lancamento:asc`, {
         cache: 'no-store'
     });
 
     const json = await res.json();
     const agendas = json.data || [];
+
+    const secoes = [
+        { id: 'HQ-MANGA', titulo: 'HQS & MANGÁS' },
+        { id: 'ANIMAÇÕES', titulo: 'ANIMAÇÕES' },
+        { id: 'GAMES', titulo: 'GAMES' },
+        { id: 'STREAMING', titulo: 'STREAMING' },
+        { id: 'CINEMA', titulo: 'CINEMA' }
+    ];
 
     return (
         <main className="min-h-screen p-6 md:p-12 max-w-6xl mx-auto text-white selection:bg-purple-500/30">
@@ -33,39 +40,65 @@ export default async function AgendaPage() {
 
             {agendas.length === 0 ? (
                 <div className="text-center py-20 border-2 border-dashed border-purple-900/30 rounded-3xl">
-                    <p className="text-purple-500 font-bold mb-2">Estamos a preparar mais datas para ti!</p>
-                    <p className="text-sm text-gray-500">Ainda não existem eventos publicados na agenda.</p>
+                    <p className="text-purple-500 font-bold mb-2">Estamos preparando mais posts para você!</p>
+                    <p className="text-sm text-gray-500">Ainda não existem posts publicados nesta categoria.</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {agendas.map((item: any) => {
-                        const dados = item.attributes || item;
+                <div className="flex flex-col gap-16">
+                    {secoes.map((secao) => {
+                        const agendasDaSecao = agendas.filter((item: any) => {
+                            // Strapi v5 não tem 'attributes', os dados vêm direto no item
+                            const dados = item.attributes || item;
+                            return dados.tipo === secao.id;
+                        });
 
-                        // 2. TRATAMENTO DA IMAGEM: Lê o campo "img" como array (Multiple Media)
-                        const mediaData = dados.img?.data;
-                        const capaUrl = Array.isArray(mediaData)
-                            ? mediaData[0]?.attributes?.url // Se for array, pega a primeira imagem
-                            : mediaData?.attributes?.url || dados.img?.url; // Fallback caso seja single
-
-                        const imageUrl = capaUrl ? (capaUrl.startsWith('http') ? capaUrl : `${apiUrl}${capaUrl}`) : '/capa-google.png';
-
-                        // 3. Lê a data
-                        const dataFormatada = (dados.data_lancamento || dados.createdAt || new Date().toISOString()).slice(0, 10);
-
-                        // 4. Junta os campos tipo e plataforma
-                        const tagsArray = [dados.tipo, dados.plataforma].filter(Boolean);
+                        if (agendasDaSecao.length === 0) return null;
 
                         return (
-                            <AgendaCard
-                                key={item.id}
-                                item={{
-                                    linkPlataforma: dados.link_plataforma,
-                                    titulo: dados.titulo,
-                                    data: dataFormatada,
-                                    capaUrl: imageUrl,
-                                    tags: tagsArray
-                                }}
-                            />
+                            <section key={secao.id}>
+                                <h2 className="text-2xl md:text-3xl font-black text-white mb-6 border-l-4 border-purple-500 pl-4 uppercase tracking-wider">
+                                    {secao.titulo}
+                                </h2>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    {agendasDaSecao.map((item: any) => {
+                                        const dados = item.attributes || item;
+
+                                        // 🚀 O NOVO RADAR STRAPI V5: Lê direto da array!
+                                        let capaUrl = '';
+                                        const campoImg = dados.img || dados.imagem || dados.capa;
+
+                                        if (Array.isArray(campoImg) && campoImg.length > 0) {
+                                            capaUrl = campoImg[0].url; // Formato do teu Strapi v5 (Multiple Media)
+                                        } else if (campoImg?.url) {
+                                            capaUrl = campoImg.url; // Caso mudes para Single Media
+                                        } else if (campoImg?.data) {
+                                            // Fallback de segurança para Strapi antigo (v4)
+                                            const mediaData = campoImg.data;
+                                            capaUrl = Array.isArray(mediaData) ? mediaData[0]?.attributes?.url : mediaData?.attributes?.url;
+                                        }
+
+                                        const imageUrl = capaUrl ? (capaUrl.startsWith('http') ? capaUrl : `${apiUrl}${capaUrl}`) : '/descaba-logo-nobg.png';
+
+                                        const dataFormatada = (dados.data_lancamento || dados.createdAt || new Date().toISOString()).slice(0, 10);
+                                        const tagsArray = [dados.plataforma].filter(Boolean);
+
+                                        return (
+                                            <AgendaCard
+                                                key={item.id}
+                                                item={{
+                                                    linkPlataforma: dados.link_plataforma,
+                                                    titulo: dados.titulo,
+                                                    descricao: dados.descricao,
+                                                    data: dataFormatada,
+                                                    capaUrl: imageUrl,
+                                                    tags: tagsArray
+                                                }}
+                                            />
+                                        );
+                                    })}
+                                </div>
+                            </section>
                         );
                     })}
                 </div>

@@ -3,6 +3,7 @@ import Image from 'next/image'; // Se preferires usar a tag <img> normal, podes 
 
 interface AgendaProps {
     titulo: string;
+    descricao?: string; // 🚀 Adicionámos a descrição aqui
     data: string;
     capaUrl: string;
     tags: string[];
@@ -14,19 +15,19 @@ const formatarData = (dataString: string) => {
     const dia = data.getDate().toString().padStart(2, '0');
     const meses = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
     const mes = meses[data.getMonth()];
-    const ano = data.getFullYear();
+    // Já não precisamos do ano aqui porque tirámos a data da parte de baixo!
 
-    return { dia, mes, completa: `${dia} ${mes}. ${ano}` };
+    return { dia, mes };
 };
 
 export default function AgendaCard({ item }: { item: AgendaProps }) {
-    const { dia, mes, completa } = formatarData(item.data);
+    const { dia, mes } = formatarData(item.data);
     const hasLink = Boolean(item.linkPlataforma);
 
     return (
         <div className="relative group block w-full max-w-[320px] rounded-2xl overflow-hidden bg-[#0c041c] border border-purple-900/40 hover:border-purple-500/60 transition-all duration-300 hover:shadow-[0_0_25px_rgba(168,85,247,0.2)]">
 
-            {/* 🔗 LINK EXTERNO INVISÍVEL COBRINDO O CARD (Se existir) */}
+            {/* LINK EXTERNO INVISÍVEL COBRINDO O CARD */}
             {hasLink && (
                 <a href={item.linkPlataforma} target="_blank" rel="noopener noreferrer" className="absolute inset-0 z-20">
                     <span className="sr-only">Acessar {item.titulo}</span>
@@ -41,7 +42,7 @@ export default function AgendaCard({ item }: { item: AgendaProps }) {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0c041c] via-[#0c041c]/20 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0c041c] via-[#0c041c]/40 to-transparent"></div>
 
                 {/* Badge da Data */}
                 <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md border border-purple-500/50 rounded-xl flex flex-col items-center justify-center w-[54px] h-[60px] shadow-lg z-10">
@@ -67,9 +68,13 @@ export default function AgendaCard({ item }: { item: AgendaProps }) {
                 <h3 className="text-white font-black text-xl leading-tight line-clamp-2 group-hover:text-purple-400 transition-colors">
                     {item.titulo}
                 </h3>
-                <p className="text-purple-300/70 font-bold text-xs tracking-widest mt-1">
-                    {completa}
-                </p>
+
+                {/* 🚀 A tua nova Descrição entra aqui! */}
+                {item.descricao && (
+                    <p className="text-gray-400 text-xs mt-1 line-clamp-2 leading-relaxed">
+                        {item.descricao}
+                    </p>
+                )}
             </div>
         </div>
     );
