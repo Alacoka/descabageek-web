@@ -1,18 +1,82 @@
-rules_version='2'
+rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // ─── Funções auxiliares ───────────────────────────────────────────────────
+
+    // Verifica se o utilizador está autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Verifica se o utilizador autenticado é o dono do documento
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Verifica se o utilizador tem role de admin (via Custom Claims)
+    // Para ativar: no Firebase Admin SDK usa setCustomUserClaims(uid, { admin: true })
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.admin == true;
+    }
+
+    // Verifica se os campos obrigatórios existem na escrita
+    function hasFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    // ─── Perfis de utilizadores ───────────────────────────────────────────────
+    // Cada utilizador pode ler e editar apenas o seu próprio perfil.
+    // Admins podem ler qualquer perfil.
+    match /users/{userId} {
+      allow read:   if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId)
+                    && hasFields(['displayName', 'email', 'createdAt']);
+      allow update: if isOwner(userId);
+      allow delete: if isAdmin();
+    }
+
+    // ─── Favoritos / Bookmarks ────────────────────────────────────────────────
+    // Apenas o próprio utilizador pode gerir os seus favoritos.
+    match /users/{userId}/favorites/{postId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // ─── Comentários (se houver no futuro) ────────────────────────────────────
+    // Qualquer pessoa pode ler. Utilizadores autenticados podem criar.
+    // Apenas o autor ou admin pode editar/apagar.
+    match /comments/{commentId} {
+      allow read: if true;
+      allow create: if isAuthenticated()
+                    && hasFields(['postId', 'text', 'createdAt', 'authorId'])
+                    && request.resource.data.authorId == request.auth.uid
+                    && request.resource.data.text.size() <= 2000;
+      allow update: if isOwner(resource.data.authorId) || isAdmin();
+      allow delete: if isOwner(resource.data.authorId) || isAdmin();
+    }
+
+    // ─── Contadores de visualizações ──────────────────────────────────────────
+    // Leitura pública. Escrita apenas via Cloud Functions (não pelo cliente).
+    match /postStats/{postId} {
+      allow read:  if true;
+      allow write: if false; // Apenas via Admin SDK / Cloud Functions
+    }
+
+    // ─── Coleção de sessões / analytics internos ──────────────────────────────
+    // Escrita permitida para utilizadores autenticados (para tracking de leitura).
+    // Leitura apenas por admins.
+    match /sessions/{sessionId} {
+      allow create: if isAuthenticated();
+      allow read:   if isAdmin();
+      allow update, delete: if false;
+    }
+
+    // ─── Regra de fallback ────────────────────────────────────────────────────
+    // Nega tudo o que não foi explicitamente permitido acima.
+    // NUNCA remover esta regra.
     match /{document=**} {
-      // This rule allows anyone with your database reference to view, edit,
-      // and delete all data in your database. It is useful for getting
-      // started, but it is configured to expire after 30 days because it
-      // leaves your app open to attackers. At that time, all client
-      // requests to your database will be denied.
-      //
-      // Make sure to write security rules for your app before that time, or
-      // else all client requests to your database will be denied until you
-      // update your rules.
-      allow read, write: if request.time < timestamp.date(2026, 5, 7);
+      allow read, write: if false;
     }
   }
 }
