@@ -1,5 +1,5 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
+import { getAuth, Auth } from "firebase/auth";
 import { getAnalytics, isSupported } from "firebase/analytics";
 
 const firebaseConfig = {
@@ -12,12 +12,18 @@ const firebaseConfig = {
     measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const auth = getAuth(app);
+// Não inicializa durante o prerender do servidor sem variáveis de ambiente.
+// O AuthButton tem "use client", por isso o auth só é usado no browser.
+let app: FirebaseApp | null = null;
+let auth: Auth | null = null;
 
-let analytics;
-if (typeof window !== "undefined") {
-    isSupported().then((yes) => yes && (analytics = getAnalytics(app)));
+if (firebaseConfig.apiKey) {
+    app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+    auth = getAuth(app);
+
+    if (typeof window !== "undefined") {
+        isSupported().then((yes) => yes && getAnalytics(app!));
+    }
 }
 
-export { app, auth, analytics };
+export { app, auth };

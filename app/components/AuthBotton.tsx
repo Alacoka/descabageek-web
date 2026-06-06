@@ -15,8 +15,11 @@ export default function AuthButton() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // onAuthStateChanged é a única fonte de verdade —
-        // dispara ao carregar a página com sessão persistida, após login e após logout
+        // auth só é null se as env vars não estiverem configuradas
+        if (!auth) {
+            setLoading(false);
+            return;
+        }
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
             setLoading(false);
@@ -25,16 +28,16 @@ export default function AuthButton() {
     }, []);
 
     const handleLogin = async () => {
-        const provider = new GoogleAuthProvider();
+        if (!auth) return;
         try {
-            await signInWithPopup(auth, provider);
-            // onAuthStateChanged detecta o novo utilizador automaticamente
+            await signInWithPopup(auth, new GoogleAuthProvider());
         } catch (error) {
             console.error("Erro ao iniciar sessão com o Google:", error);
         }
     };
 
     const handleLogout = async () => {
+        if (!auth) return;
         try {
             await signOut(auth);
         } catch (error) {
@@ -42,7 +45,6 @@ export default function AuthButton() {
         }
     };
 
-    // Placeholder animado enquanto verifica a sessão — evita flash de layout
     if (loading) {
         return (
             <div className="hidden md:block w-[72px] h-[36px] rounded-md bg-purple-950/20 animate-pulse" />
