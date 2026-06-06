@@ -69,7 +69,7 @@ const nextConfig: NextConfig = {
               "font-src 'self' https://fonts.gstatic.com",
 
               // Frames: Firebase Auth popup abre janela do accounts.google.com
-              "frame-src" +
+              "frame-src 'self'" +
               " https://*.firebaseapp.com" +
               " https://*.firebase.com" +
               " https://accounts.google.com",
