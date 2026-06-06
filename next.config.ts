@@ -1,6 +1,27 @@
 import type { NextConfig } from "next";
 
+// ID do teu projeto Firebase — encontras no Firebase Console
+const FIREBASE_PROJECT_ID = "descabageek-a59ec";
+
 const nextConfig: NextConfig = {
+  // ─── Proxy das rotas de autenticação do Firebase ───────────────────────────
+  // O Firebase Auth com authDomain personalizado precisa das rotas /__/auth/*
+  // para funcionar. Como o site está na Vercel (não no Firebase Hosting),
+  // essas rotas não existem — este rewrite faz o proxy transparente para o
+  // Firebase Hosting do projeto, sem precisar migrar o hosting.
+  async rewrites() {
+    return [
+      {
+        source: "/__/auth/:path*",
+        destination: `https://${FIREBASE_PROJECT_ID}.firebaseapp.com/__/auth/:path*`,
+      },
+      {
+        source: "/__/firebase/:path*",
+        destination: `https://${FIREBASE_PROJECT_ID}.firebaseapp.com/__/firebase/:path*`,
+      },
+    ];
+  },
+
   // ─── Otimização de imagens ─────────────────────────────────────────────────
   images: {
     remotePatterns: [
@@ -47,34 +68,24 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-
-              // Scripts: Firebase Auth precisa de apis.google.com
-              // GTM/Analytics precisam de googletagmanager.com
               "script-src 'self' 'unsafe-inline' 'unsafe-eval'" +
               " https://*.firebaseapp.com" +
               " https://*.firebase.com" +
               " https://apis.google.com" +
               " https://www.googletagmanager.com" +
               " https://vercel.live",
-
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-
-              // Imagens: inclui pixel do GTM/Analytics
               "img-src 'self' blob: data:" +
               " https://res.cloudinary.com" +
               " https://*.googleusercontent.com" +
               " https://www.googletagmanager.com" +
               " https://www.google-analytics.com",
-
               "font-src 'self' https://fonts.gstatic.com",
-
-              // Frames: Firebase Auth popup abre janela do accounts.google.com
+              // 'self' agora funciona porque o proxy acima serve /__/auth/* localmente
               "frame-src 'self'" +
               " https://*.firebaseapp.com" +
               " https://*.firebase.com" +
               " https://accounts.google.com",
-
-              // Conexões: Analytics + Firebase + Strapi + Cloudinary
               "connect-src 'self'" +
               " https://*.firebaseio.com" +
               " https://*.googleapis.com" +
@@ -84,7 +95,6 @@ const nextConfig: NextConfig = {
               " https://analytics.google.com" +
               " https://region1.google-analytics.com" +
               " " + (process.env.NEXT_PUBLIC_API_URL ?? "https://descabageek-admin.onrender.com"),
-
             ].join("; "),
           },
         ],
