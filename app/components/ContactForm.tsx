@@ -28,7 +28,7 @@ export default function ContactForm() {
             } else {
                 setStatus('error');
             }
-        } catch (error) {
+        } catch {
             setStatus('error');
         }
     };
@@ -90,6 +90,14 @@ export default function ContactForm() {
             >
                 {status === 'loading' ? 'Transmitindo...' : 'Enviar Mensagem'}
             </button>
+
+            <p className="text-xs text-gray-500 leading-6 font-medium">
+                Ao enviar, você concorda com o tratamento dos dados informados para resposta ao contato, conforme nossa{" "}
+                <a href="/privacidade" className="text-purple-400 hover:text-cyan-400 transition-colors font-bold">
+                    Política de Privacidade
+                </a>
+                .
+            </p>
         </form>
     );
 }

@@ -4,6 +4,15 @@ import { MetadataRoute } from 'next';
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://descabageek-admin.onrender.com';
 const siteUrl = 'https://descabageek.vercel.app'; // Atualiza isto quando comprares o domínio .com!
 
+type PostSitemapEntry = {
+    slug?: string;
+    updatedAt?: string;
+    attributes?: {
+        slug?: string;
+        updatedAt?: string;
+    };
+};
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // 1. Rotas estáticas do teu site
     const rotasEstaticas = [
@@ -12,6 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         { url: `${siteUrl}/listas`, lastModified: new Date() },
         { url: `${siteUrl}/agenda`, lastModified: new Date() },
         { url: `${siteUrl}/contato`, lastModified: new Date() },
+        { url: `${siteUrl}/privacidade`, lastModified: new Date() },
     ];
 
     // 2. Buscar todos os posts no Strapi dinamicamente
@@ -26,7 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         const json = await res.json();
         const posts = json.data || [];
 
-        rotasDinamicas = posts.map((post: any) => {
+        rotasDinamicas = posts.map((post: PostSitemapEntry) => {
             const dados = post.attributes || post;
             return {
                 url: `${siteUrl}/post/${dados.slug}`,

@@ -75,6 +75,7 @@ export default function RootLayout({
                 <ul className="space-y-3 text-sm text-gray-400 font-medium">
                   <li><Link href="https://www.youtube.com/@DescabaGeek" target="blank" className="hover:text-cyan-400 transition-colors">YouTube</Link></li>
                   <li><Link href="/contato" className="hover:text-cyan-400 transition-colors">Fale Conosco</Link></li>
+                  <li><Link href="/privacidade" className="hover:text-cyan-400 transition-colors">Política de Privacidade</Link></li>
                 </ul>
               </div>
             </div>
