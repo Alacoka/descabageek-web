@@ -1,6 +1,3 @@
-import Link from 'next/link';
-import Image from 'next/image'; // Se preferires usar a tag <img> normal, podes trocar!
-
 interface AgendaProps {
     titulo: string;
     descricao?: string; // 🚀 Adicionámos a descrição aqui

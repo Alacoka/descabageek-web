@@ -9,13 +9,44 @@ export const metadata: Metadata = {
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://descabageek-admin.onrender.com';
 
+type MediaField = {
+    url?: string;
+    data?: {
+        attributes?: {
+            url?: string;
+        };
+    } | Array<{
+        attributes?: {
+            url?: string;
+        };
+    }>;
+};
+
+type AgendaFields = {
+    tipo?: string;
+    img?: MediaField[];
+    imagem?: MediaField;
+    capa?: MediaField;
+    data_lancamento?: string;
+    createdAt?: string;
+    plataforma?: string;
+    link_plataforma?: string;
+    titulo?: string;
+    descricao?: string;
+};
+
+type AgendaEntry = {
+    id?: string | number;
+    attributes?: AgendaFields;
+} & AgendaFields;
+
 export default async function AgendaPage() {
     const res = await fetch(`${apiUrl}/api/agendas?populate=*&sort=data_lancamento:asc`, {
         cache: 'no-store'
     });
 
     const json = await res.json();
-    const agendas = json.data || [];
+    const agendas: AgendaEntry[] = json.data || [];
 
     const secoes = [
         { id: 'HQ-MANGA', titulo: 'HQS & MANGÁS' },
@@ -46,7 +77,7 @@ export default async function AgendaPage() {
             ) : (
                 <div className="flex flex-col gap-16">
                     {secoes.map((secao) => {
-                        const agendasDaSecao = agendas.filter((item: any) => {
+                        const agendasDaSecao = agendas.filter((item) => {
                             // Strapi v5 não tem 'attributes', os dados vêm direto no item
                             const dados = item.attributes || item;
                             return dados.tipo === secao.id;
@@ -61,7 +92,7 @@ export default async function AgendaPage() {
                                 </h2>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                    {agendasDaSecao.map((item: any) => {
+                                    {agendasDaSecao.map((item) => {
                                         const dados = item.attributes || item;
 
                                         // 🚀 O NOVO RADAR STRAPI V5: Lê direto da array!
@@ -69,26 +100,29 @@ export default async function AgendaPage() {
                                         const campoImg = dados.img || dados.imagem || dados.capa;
 
                                         if (Array.isArray(campoImg) && campoImg.length > 0) {
-                                            capaUrl = campoImg[0].url; // Formato do teu Strapi v5 (Multiple Media)
-                                        } else if (campoImg?.url) {
-                                            capaUrl = campoImg.url; // Caso mudes para Single Media
-                                        } else if (campoImg?.data) {
+                                            capaUrl = campoImg[0].url || ''; // Formato do teu Strapi v5 (Multiple Media)
+                                        } else {
+                                            const mediaField = campoImg as MediaField | undefined;
+                                            if (mediaField?.url) {
+                                                capaUrl = mediaField.url; // Caso mudes para Single Media
+                                            } else if (mediaField?.data) {
                                             // Fallback de segurança para Strapi antigo (v4)
-                                            const mediaData = campoImg.data;
-                                            capaUrl = Array.isArray(mediaData) ? mediaData[0]?.attributes?.url : mediaData?.attributes?.url;
+                                                const mediaData = mediaField.data;
+                                                capaUrl = Array.isArray(mediaData) ? mediaData[0]?.attributes?.url || '' : mediaData?.attributes?.url || '';
+                                            }
                                         }
 
                                         const imageUrl = capaUrl ? (capaUrl.startsWith('http') ? capaUrl : `${apiUrl}${capaUrl}`) : '/descaba-logo-nobg.png';
 
                                         const dataFormatada = (dados.data_lancamento || dados.createdAt || new Date().toISOString()).slice(0, 10);
-                                        const tagsArray = [dados.plataforma].filter(Boolean);
+                                        const tagsArray = [dados.plataforma].filter((tag): tag is string => Boolean(tag));
 
                                         return (
                                             <AgendaCard
                                                 key={item.id}
                                                 item={{
                                                     linkPlataforma: dados.link_plataforma,
-                                                    titulo: dados.titulo,
+                                                    titulo: dados.titulo || 'Sem título',
                                                     descricao: dados.descricao,
                                                     data: dataFormatada,
                                                     capaUrl: imageUrl,

@@ -9,6 +9,27 @@ export const metadata: Metadata = {
 // URL da API centralizada
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://descabageek-admin.onrender.com';
 
+type MediaField = {
+    url?: string;
+    data?: {
+        attributes?: {
+            url?: string;
+        };
+    };
+};
+
+type PostFields = {
+    titulo?: string;
+    slug?: string;
+    descricao?: string;
+    capa?: MediaField;
+};
+
+type PostEntry = {
+    id?: string | number;
+    attributes?: PostFields;
+} & PostFields;
+
 export default async function GuiasPage() {
     // Filtro na URL
     const res = await fetch(`${apiUrl}/api/posts?filters[categoria][$eq]=Listas&populate=*`, {
@@ -16,7 +37,7 @@ export default async function GuiasPage() {
     });
 
     const json = await res.json();
-    const posts = json.data || [];
+    const posts: PostEntry[] = json.data || [];
 
     return (
         <main className="min-h-screen p-6 md:p-12 max-w-6xl mx-auto text-white selection:bg-purple-500/30">
@@ -39,7 +60,7 @@ export default async function GuiasPage() {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {posts.map((post: any) => {
+                    {posts.map((post) => {
                         const dados = post.attributes || post;
 
                         // Lógica da Imagem de Capa

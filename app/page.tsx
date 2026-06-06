@@ -1,5 +1,32 @@
 import Link from 'next/link';
 
+type MediaField = {
+  url?: string;
+  data?: {
+    attributes?: {
+      url?: string;
+    };
+  };
+};
+
+type PostFields = {
+  titulo?: string;
+  slug?: string;
+  descricao?: string;
+  categoria?: string;
+  publishedAt?: string;
+  is_banner?: boolean;
+  link_externo?: string;
+  capa?: MediaField;
+};
+
+type PostEntry = {
+  id?: string | number;
+  documentId?: string;
+  createdAt?: string;
+  attributes?: PostFields;
+} & PostFields;
+
 export default async function Home() {
   // ⚡ Puxa a URL da nuvem que configuramos no .env, ou usa o link direto como garantia
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://descabageek-admin.onrender.com';
@@ -9,17 +36,17 @@ export default async function Home() {
   });
 
   const json = await res.json();
-  const allPosts = json.data;
+  const allPosts: PostEntry[] = json.data || [];
 
   // ⚡ MÁGICA DO BANNER: Separamos o que é anúncio do que é artigo
-  const bannerPost = allPosts?.find((post: any) => (post.attributes || post).is_banner === true);
-  const regularPosts = allPosts?.filter((post: any) => (post.attributes || post).is_banner !== true);
+  const bannerPost = allPosts.find((post) => (post.attributes || post).is_banner === true);
+  const regularPosts = allPosts.filter((post) => (post.attributes || post).is_banner !== true);
 
   // O resto da lógica continua igual para os posts normais
   const heroPost = regularPosts?.[0];
   const feedPosts = regularPosts?.slice(1) || [];
 
-  const getImageUrl = (post: any) => {
+  const getImageUrl = (post: PostEntry) => {
     const dados = post.attributes || post;
     const url = dados.capa?.data?.attributes?.url || dados.capa?.url;
 
@@ -32,14 +59,14 @@ export default async function Home() {
     return `${apiUrl}${url}`;
   };
 
-  const formatarData = (dataString: string) => {
+  const formatarData = (dataString?: string) => {
     if (!dataString) return '';
     return new Date(dataString).toLocaleDateString('pt-BR', {
       day: '2-digit', month: 'long', year: 'numeric'
     });
   };
 
-  const getCategoryColor = (categoria: string) => {
+  const getCategoryColor = (categoria?: string) => {
     if (!categoria) return 'text-cyan-400';
     const catStr = categoria.toLowerCase();
     if (catStr.includes('tech') || catStr.includes('código')) return 'text-cyan-400';
@@ -130,7 +157,7 @@ export default async function Home() {
             Mais Artigos
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-            {feedPosts.map((post: any) => {
+            {feedPosts.map((post) => {
               const dados = post.attributes || post;
               return (
                 <Link href={`/post/${dados.slug}`} key={post.documentId || post.id} className="flex flex-col group cursor-pointer">
