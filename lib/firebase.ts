@@ -5,7 +5,7 @@ import { getAnalytics, isSupported } from "firebase/analytics";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDlyy_Tj6SQq1RUV27TYXCez8ao3qB8oOA",
-    authDomain: "descabageek.com",
+    authDomain: "descabageek-a59ec.firebaseapp.com",
     projectId: "descabageek-a59ec",
     storageBucket: "descabageek-a59ec.firebasestorage.app",
     messagingSenderId: "715360735557",
