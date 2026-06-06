@@ -16,14 +16,22 @@ export default function AuthButton() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Após o redirect do Google, o Firebase guarda o resultado temporariamente.
-        // getRedirectResult() lê esse resultado no carregamento da página.
-        getRedirectResult(auth).catch((error) => {
-            console.error("Erro ao capturar resultado do login:", error);
-        });
+        // 1. Tenta capturar o utilizador que voltou do redirect do Google
+        getRedirectResult(auth)
+            .then((result) => {
+                // Se houver resultado, o onAuthStateChanged abaixo vai disparar
+                // automaticamente e actualizar o estado — não precisamos de setUser aqui
+                if (result?.user) {
+                    console.log("Login via redirect bem-sucedido:", result.user.displayName);
+                }
+            })
+            .catch((error) => {
+                console.error("Erro no redirect de login:", error);
+                setLoading(false); // garante que não fica preso no loading em caso de erro
+            });
 
-        // onAuthStateChanged trata tudo: redirect bem-sucedido, sessão persistida,
-        // e logout — é a única fonte de verdade do estado do utilizador.
+        // 2. Observa o estado de autenticação — esta é a fonte de verdade
+        // Dispara tanto após redirect bem-sucedido como para sessões persistidas
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
             setLoading(false);
@@ -34,8 +42,6 @@ export default function AuthButton() {
 
     const handleLogin = async () => {
         const provider = new GoogleAuthProvider();
-        // signInWithRedirect redireciona o browser para o Google —
-        // não há código a executar depois desta linha neste ciclo de vida.
         await signInWithRedirect(auth, provider);
     };
 
@@ -47,10 +53,12 @@ export default function AuthButton() {
         }
     };
 
-    // Enquanto verifica a sessão persistida, não renderiza nada.
-    // Evita o flash em que o botão "Login" aparece por um instante
-    // antes de perceber que o utilizador já estava autenticado.
-    if (loading) return null;
+    if (loading) {
+        // Placeholder com o mesmo tamanho do botão para evitar layout shift
+        return (
+            <div className="hidden md:block w-[72px] h-[36px] rounded-md bg-purple-950/20 animate-pulse" />
+        );
+    }
 
     if (user) {
         return (
