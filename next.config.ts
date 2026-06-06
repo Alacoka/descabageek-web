@@ -1,14 +1,8 @@
 import type { NextConfig } from "next";
 
-// ID do teu projeto Firebase — encontras no Firebase Console
 const FIREBASE_PROJECT_ID = "descabageek-a59ec";
 
 const nextConfig: NextConfig = {
-  // ─── Proxy das rotas de autenticação do Firebase ───────────────────────────
-  // O Firebase Auth com authDomain personalizado precisa das rotas /__/auth/*
-  // para funcionar. Como o site está na Vercel (não no Firebase Hosting),
-  // essas rotas não existem — este rewrite faz o proxy transparente para o
-  // Firebase Hosting do projeto, sem precisar migrar o hosting.
   async rewrites() {
     return [
       {
@@ -22,7 +16,6 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // ─── Otimização de imagens ─────────────────────────────────────────────────
   images: {
     remotePatterns: [
       {
@@ -38,11 +31,12 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // ─── Cabeçalhos de segurança HTTP ─────────────────────────────────────────
   async headers() {
     return [
       {
-        source: "/(.*)",
+        // Exclui as rotas /__/auth/* e /__/firebase/* dos headers de segurança
+        // para não interferir com o Firebase Auth que roda nessas rotas via proxy
+        source: "/((?!__/).*)",
         headers: [
           {
             key: "X-Frame-Options",
@@ -81,7 +75,6 @@ const nextConfig: NextConfig = {
               " https://www.googletagmanager.com" +
               " https://www.google-analytics.com",
               "font-src 'self' https://fonts.gstatic.com",
-              // 'self' agora funciona porque o proxy acima serve /__/auth/* localmente
               "frame-src 'self'" +
               " https://*.firebaseapp.com" +
               " https://*.firebase.com" +
