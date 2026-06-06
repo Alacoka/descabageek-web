@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import {
-    signInWithRedirect,
-    getRedirectResult,
+    signInWithPopup,
     GoogleAuthProvider,
     signOut,
     onAuthStateChanged,
@@ -16,33 +15,23 @@ export default function AuthButton() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // 1. Tenta capturar o utilizador que voltou do redirect do Google
-        getRedirectResult(auth)
-            .then((result) => {
-                // Se houver resultado, o onAuthStateChanged abaixo vai disparar
-                // automaticamente e actualizar o estado — não precisamos de setUser aqui
-                if (result?.user) {
-                    console.log("Login via redirect bem-sucedido:", result.user.displayName);
-                }
-            })
-            .catch((error) => {
-                console.error("Erro no redirect de login:", error);
-                setLoading(false); // garante que não fica preso no loading em caso de erro
-            });
-
-        // 2. Observa o estado de autenticação — esta é a fonte de verdade
-        // Dispara tanto após redirect bem-sucedido como para sessões persistidas
+        // onAuthStateChanged é a única fonte de verdade —
+        // dispara ao carregar a página com sessão persistida, após login e após logout
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
             setLoading(false);
         });
-
         return () => unsubscribe();
     }, []);
 
     const handleLogin = async () => {
         const provider = new GoogleAuthProvider();
-        await signInWithRedirect(auth, provider);
+        try {
+            await signInWithPopup(auth, provider);
+            // onAuthStateChanged detecta o novo utilizador automaticamente
+        } catch (error) {
+            console.error("Erro ao iniciar sessão com o Google:", error);
+        }
     };
 
     const handleLogout = async () => {
@@ -53,8 +42,8 @@ export default function AuthButton() {
         }
     };
 
+    // Placeholder animado enquanto verifica a sessão — evita flash de layout
     if (loading) {
-        // Placeholder com o mesmo tamanho do botão para evitar layout shift
         return (
             <div className="hidden md:block w-[72px] h-[36px] rounded-md bg-purple-950/20 animate-pulse" />
         );
