@@ -1,67 +1,99 @@
-# DescabaGeek
+# DescabaGeek — Frontend
 
-> **Portal de Cultura Pop desenvolvido com arquitetura Full-Stack moderna (Headless CMS).**
+> Portal de Cultura Pop construído com arquitetura Headless CMS.
 
-🔗 **Acesso ao Projeto (Front-end):** [https://www.descabageek.com](https://www.descabageek.com)  
-
----
-
-## 💻 Sobre o Projeto
-
-O **DescabaGeek** é um portal dinâmico desenhado para a comunidade geek e tech. O principal objetivo deste projeto foi construir uma aplicação web robusta, rápida e totalmente gerível através de uma arquitetura desacoplada, separando completamente a camada de apresentação (Front-end) da camada de gestão de conteúdos (Back-end).
-
-O layout conta com um *Dark Mode* nativo e elementos "cyberpunk", garantindo uma leitura confortável e uma identidade visual focada no público *gamer*.
-
-## 🛠️ Stack Tecnológica
-
-Este projeto foi construído utilizando as ferramentas mais modernas do mercado para garantir performance, escalabilidade e segurança:
-
-### Front-end (Camada de Apresentação)
-* **[Next.js](https://nextjs.org/)** - Framework React com App Router.
-* **[TypeScript](https://www.typescriptlang.org/)** - Tipagem estática para maior segurança no código.
-* **[Tailwind CSS](https://tailwindcss.com/)** - Estilização utilitária, responsiva e focada em performance.
-* **[Firebase Auth](https://firebase.google.com/)** - Autenticação de utilizadores (Google Login).
-* **[Vercel](https://vercel.com/)** - Hospedagem e CI/CD do Front-end.
-
-### Back-end & Infraestrutura (Headless CMS)
-* **[Strapi](https://strapi.io/)** - Sistema de gestão de conteúdos (Node.js) a fornecer dados via REST API.
-* **[PostgreSQL (Supabase)](https://supabase.com/)** - Banco de dados relacional na nuvem.
-* **[Cloudinary](https://cloudinary.com/)** - CDN e armazenamento externo blindado para imagens e mídias.
-* **[Render](https://render.com/)** - Hospedagem do servidor Node.js/Strapi.
+🔗 **Site:** [www.descabageek.com](https://www.descabageek.com)
 
 ---
 
-## ✨ Principais Funcionalidades
+## Stack
 
-* 📰 **Feed Dinâmico de Notícias:** Consumo de API RESTful em tempo real.
-* 🏆 **Post Herói (Destaque):** Algoritmo que separa a matéria mais recente para destaque visual no topo da página.
-* 📢 **Sistema de Banners Publicitários:** Lógica de identificação nativa para renderizar espaços patrocinados automaticamente.
-* 🏷️ **Categorização por Cores:** Tags dinâmicas e coloridas baseadas no tema do post (Tech, RPG, Animes, Filmes, etc).
-* 🛡️ **Painel Administrativo:** Interface completa para criar, editar, apagar e publicar matérias sem mexer numa única linha de código.
-* ☁️ **Upload para a Nuvem:** Imagens das matérias são automaticamente enviadas e servidas pelo Cloudinary, aliviando o servidor principal.
+| Camada | Tecnologia |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Linguagem | TypeScript |
+| Estilo | Tailwind CSS v4 |
+| Autenticação | Firebase Auth (Google) |
+| Hosting | Vercel |
+| API de conteúdos | Strapi (descabageek-admin) |
 
 ---
 
-## 🚀 Como correr o projeto localmente
+## Variáveis de ambiente
 
-Para clonar e testar este projeto na sua máquina, vai precisar do [Node.js](https://nodejs.org/en/) instalado.
+Copia o `.env.local.example` para `.env.local` e preenche os valores:
 
-### 1. Front-end (Next.js)
 ```bash
-# Clone o repositório
-git clone [https://github.com/SEU_USUARIO/descabageek-web.git](https://github.com/SEU_USUARIO/descabageek-web.git)
+cp .env.local.example .env.local
+```
 
-# Entre na pasta
-cd descabageek-web
+| Variável | Onde encontrar |
+|---|---|
+| `NEXT_PUBLIC_API_URL` | URL do backend Strapi no Render |
+| `STRAPI_HOSTNAME` | Só o hostname (sem https://) do Render |
+| `NEXT_PUBLIC_FIREBASE_API_KEY` | Firebase Console → Project Settings → Web App |
+| `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Idem (ex: `projecto-abc.firebaseapp.com`) |
+| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Idem |
+| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | Idem |
+| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Idem |
+| `NEXT_PUBLIC_FIREBASE_APP_ID` | Idem |
+| `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID` | Idem (GA4) |
 
-# Instale as dependências
+> As variáveis `NEXT_PUBLIC_*` são expostas no bundle do cliente — não colocar segredos nelas.
+> O `STRAPI_HOSTNAME` é apenas para servidor e nunca é exposto ao cliente.
+
+---
+
+## Correr localmente
+
+```bash
+# Instalar dependências
 npm install
 
-# Crie um ficheiro .env.local e adicione a variável da API
-# NEXT_PUBLIC_API_URL=http://localhost:1337 (Para testar local)
-
-# Inicie o servidor
+# Iniciar em desenvolvimento
 npm run dev
 ```
+
+O site fica disponível em `http://localhost:3000`.
+
+Para apontar para o backend local do Strapi, define em `.env.local`:
+```
+NEXT_PUBLIC_API_URL=http://localhost:1337
+STRAPI_HOSTNAME=localhost
+```
+
 ---
+
+## Scripts disponíveis
+
+```bash
+npm run dev          # servidor de desenvolvimento
+npm run build        # build de produção
+npm run start        # servidor de produção
+npm run lint         # verificar erros de linting
+npm test             # correr testes (Vitest)
+npm run test:watch   # testes em modo watch
+npm run test:coverage # relatório de cobertura
+```
+
+---
+
+## Estrutura de pastas
+
+```
+app/
+  components/     # componentes React reutilizáveis
+  post/[slug]/    # página de detalhe de post
+  page.tsx        # página principal (feed)
+  layout.tsx      # layout global (header, footer)
+  sitemap.ts      # sitemap dinâmico para SEO
+  robots.ts       # regras para crawlers
+lib/
+  firebase.ts     # inicialização do Firebase
+  utils.ts        # funções utilitárias (formatarData, getCategoryColor, etc.)
+public/           # assets estáticos
+```
+
+---
+
 Desenvolvido por Kawã Alacoque.
