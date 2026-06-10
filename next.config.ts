@@ -38,12 +38,12 @@ const nextConfig: NextConfig = {
               " https://res.cloudinary.com https://*.googleusercontent.com" +
               " https://www.googletagmanager.com https://www.google-analytics.com",
               "font-src 'self' https://fonts.gstatic.com",
-              // Sem custom authDomain, o Firebase usa *.firebaseapp.com para os iframes
               "frame-src https://*.firebaseapp.com https://*.firebase.com https://accounts.google.com",
               "connect-src 'self'" +
               " https://*.firebaseio.com https://*.googleapis.com https://*.cloudfunctions.net" +
               " https://api.cloudinary.com" +
               " https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com" +
+              " https://formspree.io" + // 🚀 O FORMSPREE FOI ADICIONADO AQUI NA LISTA VIP!
               " " + (process.env.NEXT_PUBLIC_API_URL ?? "https://descabageek-admin.onrender.com"),
             ].join("; "),
           },
