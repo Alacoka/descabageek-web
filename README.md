@@ -1,4 +1,4 @@
-# DescabaGeek — Frontend
+# DescabaGeek
 
 > Portal de Cultura Pop construído com arquitetura Headless CMS.
 
