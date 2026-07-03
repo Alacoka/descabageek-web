@@ -4,7 +4,7 @@ import Link from "next/link";
 import "./globals.css";
 import Header from "./components/header";
 import Capa from "../public/logo-google.png";
-import CortinaManutencao from "./components/CortinaManutencao";
+// import CortinaManutencao from "./components/CortinaManutencao";
 
 const fontBase = Montserrat({ subsets: ["latin"], weight: ['400', '600', '700', '800', '900'] });
 
@@ -48,7 +48,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${fontBase.className} bg-[#060111] text-gray-100 antialiased flex flex-col min-h-screen`}>
-        <CortinaManutencao /> {/* 🚀 A CORTINA ENTRA AQUI */}
+        {/* <CortinaManutencao /> 🚀 A CORTINA ENTRA AQUI */}
         {/* HEADER GEEK NEON (Agora encapsulado e interativo) */}
         <Header />
 
