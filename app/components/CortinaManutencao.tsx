@@ -36,7 +36,7 @@ export default function CortinaManutencao() {
                 </h1>
                 
                 <p className="text-gray-400 text-lg md:text-xl font-medium max-w-lg leading-relaxed border border-purple-900/30 bg-black/40 backdrop-blur-md p-6 rounded-2xl">
-                    Estamos trabalhando para melhorar o nosso blog. O <strong className="text-white">DescabaGeek</strong> volta em breve ainda mais rápido e novidades épicas!
+                    O <strong className="text-white">DescabaGeek</strong> chegará em breve, trazendo o maior portal e fórum de cultura geek no país.
                 </p>
 
                 <div className="mt-12 flex items-center gap-3 text-cyan-400/70 text-sm font-bold tracking-widest uppercase">
